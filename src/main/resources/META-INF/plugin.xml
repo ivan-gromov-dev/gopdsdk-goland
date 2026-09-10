@@ -1,0 +1,14 @@
+<idea-plugin>
+    <id>dev.gopdsdk.goland</id>
+    <name>gopdsdk</name>
+    <vendor>gopdsdk</vendor>
+    <description><![CDATA[
+        Playdate-specific diagnostics, rule help, and safe fixes provided by
+        the gopdsdk language server alongside GoLand's normal Go support.
+    ]]></description>
+    <depends>com.intellij.modules.platform</depends>
+    <depends>org.jetbrains.plugins.go</depends>
+    <extensions defaultExtensionNs="com.intellij">
+        <platform.lsp.integrationProvider implementation="dev.gopdsdk.goland.GopdsdkLspIntegrationProvider"/>
+    </extensions>
+</idea-plugin>
