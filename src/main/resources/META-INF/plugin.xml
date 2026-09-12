@@ -10,5 +10,7 @@
     <depends>org.jetbrains.plugins.go</depends>
     <extensions defaultExtensionNs="com.intellij">
         <platform.lsp.integrationProvider implementation="dev.gopdsdk.goland.GopdsdkLspIntegrationProvider"/>
+        <projectConfigurable parentId="tools" instance="dev.gopdsdk.goland.GopdsdkConfigurable" id="dev.gopdsdk.settings" displayName="gopdsdk"/>
+        <notificationGroup id="gopdsdk" displayType="BALLOON"/>
     </extensions>
 </idea-plugin>
