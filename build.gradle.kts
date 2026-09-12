@@ -1,10 +1,16 @@
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
+
 plugins {
-    kotlin("jvm") version "2.2.20"
+    kotlin("jvm") version "2.4.20"
     id("org.jetbrains.intellij.platform") version "2.18.1"
 }
 
 group = "dev.gopdsdk"
 version = "0.1.0"
+
+val minimumGoLandVersion = providers.gradleProperty("minimumGoLandVersion")
+val latestGoLandVersion = providers.gradleProperty("latestGoLandVersion")
+val platformVersion = providers.gradleProperty("platformVersion")
 
 repositories {
     mavenCentral()
@@ -16,7 +22,7 @@ repositories {
 
 dependencies {
     intellijPlatform {
-        goland("2026.1.4")
+        goland(platformVersion)
         bundledPlugin("org.jetbrains.plugins.go")
         testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
     }
@@ -37,7 +43,12 @@ intellijPlatform {
         }
         vendor { name = "gopdsdk" }
     }
-    pluginVerification { ides { recommended() } }
+    pluginVerification {
+        ides {
+            create(IntelliJPlatformType.GoLand, minimumGoLandVersion)
+            create(IntelliJPlatformType.GoLand, latestGoLandVersion)
+        }
+    }
 }
 
 tasks { test { useJUnitPlatform() } }
