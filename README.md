@@ -25,7 +25,11 @@ with a shortcut to Settings. Marketplace packaging is tracked in
 
 An executable outside PATH can be selected under
 **Settings | Tools | gopdsdk**. Applying a changed path restarts the project's
-language server.
+language server. Analyzer target, compatibility floors, rule/category selection,
+severity overrides, baseline, changed files, and explicit deep analysis are also
+project settings. Applying those settings refreshes a running server without a
+restart; comma-separated fields use the same identifiers and workspace-relative
+paths as `gopdsdk check`, and severity entries use `selector=severity`.
 
 ## Development
 

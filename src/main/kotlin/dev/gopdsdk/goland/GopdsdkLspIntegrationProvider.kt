@@ -28,6 +28,9 @@ private class GopdsdkLspClientDescriptor(project: Project) :
         ProjectWideLspClientDescriptor(project, "gopdsdk") {
     override fun isSupportedFile(file: VirtualFile): Boolean = file.extension == "go"
 
+    override fun createInitializationOptions(): Any =
+        GopdsdkSettings.getInstance(project).state.analyzerSettings()
+
     override fun createCommandLine(): GeneralCommandLine {
         val configured = GopdsdkSettings.getInstance(project).state.executablePath
         val executable = ExecutableDiscovery.find(configured)

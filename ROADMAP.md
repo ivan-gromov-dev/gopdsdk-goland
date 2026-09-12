@@ -32,10 +32,13 @@ Status: complete.
 
 ## M3 — Analyzer configuration
 
-- target, SDK floor, rules/categories, severity, baseline, changed-file mode,
+Status: complete; diagnostic parity depends on the selected server honoring the
+corresponding analyzer-protocol fields.
+
+- [x] target, SDK floor, rules/categories, severity, baseline, changed-file mode,
   and explicit deep-analysis opt-in;
-- project persistence and multi-module behavior;
-- configuration refresh without restart when supported.
+- [x] project persistence and consistent settings across project content roots;
+- [x] configuration refresh without restart when supported.
 
 Verification: parity with equivalent `gopdsdk check` executions.
 
