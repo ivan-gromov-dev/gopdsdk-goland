@@ -9,10 +9,10 @@ logic, severity decisions, or edit generation from gopdsdk.
 
 ## Status
 
-This repository contains the initial IntelliJ Platform plugin scaffold and a
+This repository contains a reproducible IntelliJ Platform plugin scaffold and a
 minimal project-wide LSP integration. It currently expects `gopdsdk` on PATH.
-Settings, compatibility checks, tests, and Marketplace packaging are tracked in
-[ROADMAP.md](ROADMAP.md).
+Settings, executable compatibility checks, and Marketplace packaging are tracked
+in [ROADMAP.md](ROADMAP.md).
 
 ## Requirements
 
@@ -27,6 +27,13 @@ Settings, compatibility checks, tests, and Marketplace packaging are tracked in
 ./gradlew test
 ./gradlew buildPlugin
 ./gradlew verifyPlugin
+```
+
+The default build targets the oldest supported GoLand release. To exercise the
+newest supported platform directly, run:
+
+```text
+./gradlew test -PplatformVersion=2026.2.0.1
 ```
 
 `runIde` launches a sandboxed GoLand. Open a Go module that uses gopdsdk; the

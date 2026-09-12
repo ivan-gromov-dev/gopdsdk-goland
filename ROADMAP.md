@@ -14,10 +14,12 @@ Status: complete.
 
 ## M1 — Reproducible bootstrap
 
-- check in dependency verification data;
-- pin the minimum GoLand platform and test the newest compatible release;
-- add Windows, macOS, and Linux CI;
-- run Plugin Verifier at every compatibility boundary.
+Status: complete.
+
+- dependency verification data is checked in;
+- GoLand 2026.1.4 is the pinned compilation floor and CI also tests 2026.2.0.1;
+- Windows, macOS, and Linux run the build and tests in CI;
+- Plugin Verifier checks both supported compatibility boundaries in CI.
 
 ## M2 — Executable contract
 
