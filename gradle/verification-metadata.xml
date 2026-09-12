@@ -4729,6 +4729,18 @@
          </artifact>
       </component>
       <component group="go" name="goland" version="2026.1.4">
+         <artifact name="goland-2026.1.4-aarch64.dmg">
+            <sha256 value="cbb98491ed33d0cbd0b3e90cb6b9ababb11e02d2546e0a3ab0666b381d0cada3" origin="JetBrains release checksum"/>
+         </artifact>
+         <artifact name="goland-2026.1.4-aarch64.tar.gz">
+            <sha256 value="eecf7c918d3c68a8dd44640b0e47df7958608f5156bab2e64d3626b5be50c7a7" origin="JetBrains release checksum"/>
+         </artifact>
+         <artifact name="goland-2026.1.4.dmg">
+            <sha256 value="45bbdc2e92d5c9e2f80750c9dbff546ffe82cfa7c919730f087b09ef4e46b00a" origin="JetBrains release checksum"/>
+         </artifact>
+         <artifact name="goland-2026.1.4.tar.gz">
+            <sha256 value="a4749b98067eb527dad3076d0e9ff721bfc634c3f7d0e14d4251d651f330ad6d" origin="JetBrains release checksum"/>
+         </artifact>
          <artifact name="goland-2026.1.4-linux-aarch64.tar.gz">
             <sha256 value="eecf7c918d3c68a8dd44640b0e47df7958608f5156bab2e64d3626b5be50c7a7" origin="JetBrains release checksum"/>
          </artifact>
@@ -4746,6 +4758,18 @@
          </artifact>
       </component>
       <component group="go" name="goland" version="2026.2.0.1">
+         <artifact name="goland-2026.2.0.1-aarch64.dmg">
+            <sha256 value="ceb400b0e391e0e8405e779bc27464ddd6b88781a2d2df1ff9221a1008b03344" origin="JetBrains release checksum"/>
+         </artifact>
+         <artifact name="goland-2026.2.0.1-aarch64.tar.gz">
+            <sha256 value="b7abc7edfc6dcac829adcd441c7dd78887470faa0231c63f6b586ee5a8983311" origin="JetBrains release checksum"/>
+         </artifact>
+         <artifact name="goland-2026.2.0.1.dmg">
+            <sha256 value="a9a31337b0b8da3db6e7d58e6a2100031752a2d02318eb90978cac1a969a55ea" origin="JetBrains release checksum"/>
+         </artifact>
+         <artifact name="goland-2026.2.0.1.tar.gz">
+            <sha256 value="9d3fe39b0d1614dc26b564796ded0a0541c9a4ce3ca6185837ba1434e302ae89" origin="JetBrains release checksum"/>
+         </artifact>
          <artifact name="goland-2026.2.0.1-linux-aarch64.tar.gz">
             <sha256 value="b7abc7edfc6dcac829adcd441c7dd78887470faa0231c63f6b586ee5a8983311" origin="JetBrains release checksum"/>
          </artifact>
