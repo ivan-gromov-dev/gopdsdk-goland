@@ -10,15 +10,22 @@ logic, severity decisions, or edit generation from gopdsdk.
 ## Status
 
 This repository contains a reproducible IntelliJ Platform plugin scaffold and a
-minimal project-wide LSP integration. It currently expects `gopdsdk` on PATH.
-Settings, executable compatibility checks, and Marketplace packaging are tracked
-in [ROADMAP.md](ROADMAP.md).
+project-wide LSP integration with a project-specific executable setting. It
+prefers that explicit path and otherwise discovers `gopdsdk` deterministically
+on PATH. Before starting the editor server, the plugin runs a bounded LSP
+version/capability probe and reports configuration or compatibility failures
+with a shortcut to Settings. Marketplace packaging is tracked in
+[ROADMAP.md](ROADMAP.md).
 
 ## Requirements
 
 - GoLand 2026.1.4 through 2026.2;
 - JDK 21 for development (the Gradle wrapper can provision it automatically);
 - `gopdsdk` with the `lsp` command on PATH.
+
+An executable outside PATH can be selected under
+**Settings | Tools | gopdsdk**. Applying a changed path restarts the project's
+language server.
 
 ## Development
 

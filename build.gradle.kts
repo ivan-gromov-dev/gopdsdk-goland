@@ -26,6 +26,10 @@ dependencies {
         bundledPlugin("org.jetbrains.plugins.go")
         testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
     }
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.13.4")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.13.4")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.13.4")
+    testRuntimeOnly("junit:junit:4.13.2")
 }
 
 kotlin { jvmToolchain(21) }

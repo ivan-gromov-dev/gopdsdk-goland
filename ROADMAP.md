@@ -23,6 +23,8 @@ Status: complete.
 
 ## M2 — Executable contract
 
+Status: complete.
+
 - project settings and deterministic executable discovery;
 - bounded version/capability probe with actionable notifications;
 - restart after settings changes, clean shutdown, and redacted logs;
