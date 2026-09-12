@@ -10,10 +10,10 @@ internal class GopdsdkLspIntegrationProvider : LspIntegrationProvider {
     override fun fileOpened(
             project: Project,
             file: VirtualFile,
-            serverStarter: LspIntegrationProvider.LspClientStarter,
+            clientStarter: LspIntegrationProvider.LspClientStarter,
     ) {
         if (file.extension == "go") {
-            serverStarter.ensureClientStarted(GopdsdkLspClientDescriptor(project))
+            clientStarter.ensureClientStarted(GopdsdkLspClientDescriptor(project))
         }
     }
 }

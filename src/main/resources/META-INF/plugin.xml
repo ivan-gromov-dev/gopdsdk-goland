@@ -1,5 +1,5 @@
 <idea-plugin>
-    <id>dev.gopdsdk.goland</id>
+    <id>dev.gopdsdk</id>
     <name>gopdsdk</name>
     <vendor>gopdsdk</vendor>
     <description><![CDATA[

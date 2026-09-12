@@ -5,7 +5,7 @@ evidence is distinct from live editor, SDK, Simulator, USB, and device evidence.
 
 ## M0 — Scaffold
 
-Status: complete, except for generating the Gradle wrapper and build verification.
+Status: complete.
 
 - Kotlin/JVM and IntelliJ Platform Gradle Plugin 2.x;
 - GoLand and bundled Go-plugin dependencies;
@@ -14,7 +14,7 @@ Status: complete, except for generating the Gradle wrapper and build verificatio
 
 ## M1 — Reproducible bootstrap
 
-- check in the Gradle 9 wrapper and dependency verification data;
+- check in dependency verification data;
 - pin the minimum GoLand platform and test the newest compatible release;
 - add Windows, macOS, and Linux CI;
 - run Plugin Verifier at every compatibility boundary.

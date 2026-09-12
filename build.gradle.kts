@@ -8,7 +8,10 @@ version = "0.1.0"
 
 repositories {
     mavenCentral()
-    intellijPlatform { defaultRepositories() }
+    intellijPlatform {
+        defaultRepositories()
+        intellijDependencies()
+    }
 }
 
 dependencies {
@@ -24,7 +27,7 @@ kotlin { jvmToolchain(21) }
 intellijPlatform {
     buildSearchableOptions = false
     pluginConfiguration {
-        id = "dev.gopdsdk.goland"
+        id = "dev.gopdsdk"
         name = "gopdsdk"
         version = project.version.toString()
         description = "Playdate diagnostics and safe fixes powered by gopdsdk."
