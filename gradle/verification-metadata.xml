@@ -3,6 +3,9 @@
    <configuration>
       <verify-metadata>true</verify-metadata>
       <verify-signatures>false</verify-signatures>
+      <trusted-artifacts>
+         <trust group="bundled(Module|Plugin)" regex="true" reason="Extracted locally by the IntelliJ Platform Gradle Plugin from the verified IDE distribution"/>
+      </trusted-artifacts>
    </configuration>
    <components>
       <component group="bundledModule" name="fleet.andel" version="GO-262.8665.336">
