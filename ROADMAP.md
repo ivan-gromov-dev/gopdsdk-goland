@@ -65,10 +65,27 @@ bundled Go plugin.
 
 ## M5 — Reliability
 
-- stress rapid edits, reloads, branch switches, crashes, and IDE shutdown;
-- measure startup, incremental latency, memory, and cancellation on a realistic
-  game; keep deep analysis off by default until evidence supports it;
-- manually smoke-test all three desktop platforms.
+Status: implementation complete; cross-platform CI and live desktop evidence remain.
+
+- [x] add deterministic reload, configuration-churn, crash, and shutdown stress;
+- [x] define reproducible startup, incremental latency, memory, and cancellation
+  measurements on a realistic game; keep deep analysis off by default until
+  evidence supports it;
+- [ ] complete live smoke evidence on all three desktop platforms.
+
+Verification: automated stress sessions and manual smoke checks on Windows,
+macOS, and Linux, labeled as editor-integration evidence.
+
+The deterministic plugin test models a 603-file, three-module game, performs 40
+rapid configuration changes, and runs 60 startup/reload cycles with six forced
+analyzer crashes. It verifies clean shutdown and process reaping, records the
+bounded probe latency as structured plugin-unit evidence, and protects the
+deep-analysis opt-in default. CI runs this coverage against both supported
+GoLand boundaries on all three desktop platforms. Native IntelliJ LSP owns
+document synchronization, cancellation, crash recovery, and project reload;
+manual smoke results for those behaviors must name the GoLand build and host
+platform and must not be described as SDK, Simulator, USB, or device evidence.
+The reproducible live protocol is documented in [RELIABILITY.md](RELIABILITY.md).
 
 ## M6 — Distribution
 

@@ -67,6 +67,15 @@ GoLand Go files
 The plugin uses the native IntelliJ LSP client instead of embedding another
 protocol implementation.
 
+Reliability coverage exercises a 603-file, three-module workload, rapid
+configuration churn, repeated analyzer reloads, forced crashes, clean shutdown,
+and process reaping. CI runs the deterministic plugin-unit session on Windows,
+macOS, and Linux for both supported GoLand boundaries. Timings are regression
+guards; live editor, SDK, Simulator, USB, and device readiness require their own
+explicit evidence.
+The automated and live-editor evidence procedures are documented in
+[RELIABILITY.md](RELIABILITY.md).
+
 ## License
 
 MIT. See [LICENSE](LICENSE).
