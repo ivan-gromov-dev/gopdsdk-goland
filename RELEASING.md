@@ -31,7 +31,8 @@ these values.
 Run the `Package GoLand plugin` workflow from tag `v0.1.0`, initially with
 channel `eap` and publishing disabled. It must:
 
-1. run unit tests and Plugin Verifier against GoLand 2026.1.4 and 2026.2;
+1. run Plugin Verifier against GoLand 2026.1.4 and 2026.2 in isolated jobs, then
+   run unit tests in the packaging job;
 2. reproduce the unsigned ZIP byte-for-byte from two clean builds;
 3. sign the ZIP and verify its signature;
 4. generate its SHA-256, SPDX SBOM, and GitHub provenance/SBOM attestations;

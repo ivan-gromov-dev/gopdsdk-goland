@@ -12,6 +12,7 @@ version = "0.1.0"
 val minimumGoLandVersion = providers.gradleProperty("minimumGoLandVersion")
 val latestGoLandVersion = providers.gradleProperty("latestGoLandVersion")
 val platformVersion = providers.gradleProperty("platformVersion")
+val verifierGoLandVersion = providers.gradleProperty("verifierGoLandVersion")
 
 repositories {
     mavenCentral()
@@ -61,8 +62,12 @@ intellijPlatform {
     }
     pluginVerification {
         ides {
-            create(IntelliJPlatformType.GoLand, minimumGoLandVersion)
-            create(IntelliJPlatformType.GoLand, latestGoLandVersion)
+            if (verifierGoLandVersion.isPresent) {
+                create(IntelliJPlatformType.GoLand, verifierGoLandVersion)
+            } else {
+                create(IntelliJPlatformType.GoLand, minimumGoLandVersion)
+                create(IntelliJPlatformType.GoLand, latestGoLandVersion)
+            }
         }
     }
 }

@@ -23,7 +23,26 @@ permissions:
   attestations: write
 
 jobs:
+  compatibility:
+    name: Plugin Verifier (GoLand ${{ matrix.goland }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        goland: [2026.1.4, 2026.2.0.1]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: gradle
+      - uses: gradle/actions/setup-gradle@v5
+      - name: Verify plugin
+        run: ./gradlew verifyPlugin "-PplatformVersion=${{ matrix.goland }}" "-PverifierGoLandVersion=${{ matrix.goland }}"
+
   package:
+    needs: compatibility
     runs-on: ubuntu-latest
     environment: ${{ inputs.publish && format('marketplace-{0}', inputs.channel) || 'release-package' }}
     steps:
@@ -37,10 +56,8 @@ jobs:
       - name: Require an immutable clean version
         shell: bash
         run: bash scripts/validate-release.sh "${{ inputs.channel }}" "${{ github.ref_type }}" "${{ github.ref_name }}" "${{ inputs.publish }}" >> "$GITHUB_ENV"
-      - name: Test, build, and verify
-        run: ./gradlew clean test buildPlugin verifyPlugin
-      - name: Test newest supported GoLand
-        run: ./gradlew test "-PplatformVersion=2026.2.0.1"
+      - name: Test and build
+        run: ./gradlew clean test buildPlugin
       - name: Verify reproducible unsigned ZIP
         shell: bash
         run: bash scripts/verify-reproducible.sh

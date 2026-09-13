@@ -30,8 +30,12 @@ jobs:
         run: ./gradlew buildPlugin test "-PplatformVersion=${{ matrix.goland }}"
 
   compatibility:
-    name: Plugin Verifier (compatibility boundaries)
+    name: Plugin Verifier (GoLand ${{ matrix.goland }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        goland: [2026.1.4, 2026.2.0.1]
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-java@v5
@@ -41,7 +45,7 @@ jobs:
           cache: gradle
       - uses: gradle/actions/setup-gradle@v5
       - name: Verify plugin
-        run: ./gradlew verifyPlugin
+        run: ./gradlew verifyPlugin "-PplatformVersion=${{ matrix.goland }}" "-PverifierGoLandVersion=${{ matrix.goland }}"
 
   ci-success:
     name: CI Success
