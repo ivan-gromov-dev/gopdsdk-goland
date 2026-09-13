@@ -4,7 +4,7 @@ All notable user-visible changes are recorded here. Release claims distinguish
 plugin-unit, editor-integration, SDK, Simulator, USB, and physical-device
 evidence.
 
-## 0.1.0 — Unreleased
+## 0.1.0 — 2026-09-13
 
 - Add a GoLand-only native LSP integration for `gopdsdk lsp`.
 - Add project settings for executable discovery and analyzer configuration.
