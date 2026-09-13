@@ -14,8 +14,8 @@ project-wide LSP integration with a project-specific executable setting. It
 prefers that explicit path and otherwise discovers `gopdsdk` deterministically
 on PATH. Before starting the editor server, the plugin runs a bounded LSP
 version/capability probe and reports configuration or compatibility failures
-with a shortcut to Settings. Marketplace packaging is tracked in
-[ROADMAP.md](ROADMAP.md).
+with a shortcut to Settings. Release packaging, signing, and Marketplace gates
+are documented in [RELEASING.md](RELEASING.md).
 
 ## Requirements
 
@@ -67,6 +67,9 @@ GoLand Go files
 The plugin uses the native IntelliJ LSP client instead of embedding another
 protocol implementation.
 
+The plugin declares the GoLand product module and is intentionally unavailable
+in IntelliJ IDEA or other IDEs, even when their Go plugin is installed.
+
 Reliability coverage exercises a 603-file, three-module workload, rapid
 configuration churn, repeated analyzer reloads, forced crashes, clean shutdown,
 and process reaping. CI runs the deterministic plugin-unit session on Windows,
@@ -79,3 +82,7 @@ The automated and live-editor evidence procedures are documented in
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+For data handling, support, and vulnerability reporting, see
+[PRIVACY.md](PRIVACY.md), [SUPPORT.md](SUPPORT.md), and
+[SECURITY.md](SECURITY.md).

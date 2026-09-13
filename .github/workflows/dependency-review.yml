@@ -1,0 +1,26 @@
+name: Dependency integrity
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  dependency-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: gradle
+      - uses: gradle/actions/setup-gradle@v5
+      - name: Resolve and verify dependency checksums
+        run: ./gradlew buildPlugin test --dependency-verification=strict
+      - name: Require committed verification metadata
+        run: git diff --exit-code -- gradle/verification-metadata.xml

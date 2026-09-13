@@ -89,10 +89,25 @@ The reproducible live protocol is documented in [RELIABILITY.md](RELIABILITY.md)
 
 ## M6 — Distribution
 
-- icons, screenshots, changelog, privacy and support policies;
-- signed CI artifacts, dependency review, and reproducible ZIPs;
-- early-access, then stable JetBrains Marketplace publication;
-- supported-range upgrade and downgrade checks.
+Status: implementation complete; live desktop evidence, real screenshots,
+hosted attestations, and Marketplace publication require external release
+evidence.
+
+- [x] plugin icon, changelog, privacy, security, support, and release policies;
+- [x] signed CI artifacts, strict dependency checksum verification, SBOM,
+  provenance, and reproducible unsigned ZIP verification;
+- [x] guarded EAP and stable JetBrains Marketplace publication workflow;
+- [x] GoLand-only product dependency and supported-range release protocol;
+- [ ] capture real product screenshots and complete live installation, upgrade,
+  downgrade, EAP, and stable publication evidence.
+
+The first release workflow run accepts only the immutable `v0.1.0` tag, creates a
+developer-signed ZIP, verifies its signature, emits SHA-256 and SPDX SBOM
+artifacts, and requests GitHub provenance attestations. Publication is a
+separate boolean input protected by the `marketplace-eap` or
+`marketplace-stable` GitHub environment. Secrets are never committed. Because
+Marketplace forbids duplicate versions, `0.1.0` is the EAP candidate and the
+first stable publication uses the next reviewed patch version.
 
 Exit criterion: GoLand, VS Code, and CLI expose equivalent rule identifiers,
 diagnostics, and safe fixes without analysis rules in editor clients.

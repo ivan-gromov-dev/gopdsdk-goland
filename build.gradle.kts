@@ -1,4 +1,5 @@
 import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
+import org.gradle.api.tasks.bundling.AbstractArchiveTask
 
 plugins {
     kotlin("jvm") version "2.4.20"
@@ -11,6 +12,7 @@ version = "0.1.0"
 val minimumGoLandVersion = providers.gradleProperty("minimumGoLandVersion")
 val latestGoLandVersion = providers.gradleProperty("latestGoLandVersion")
 val platformVersion = providers.gradleProperty("platformVersion")
+val verifierGoLandVersion = providers.gradleProperty("verifierGoLandVersion")
 
 repositories {
     mavenCentral()
@@ -47,12 +49,33 @@ intellijPlatform {
         }
         vendor { name = "gopdsdk" }
     }
+    signing {
+        certificateChain = providers.environmentVariable("CERTIFICATE_CHAIN")
+        privateKey = providers.environmentVariable("PRIVATE_KEY")
+        password = providers.environmentVariable("PRIVATE_KEY_PASSWORD")
+    }
+    publishing {
+        token = providers.environmentVariable("PUBLISH_TOKEN")
+        channels = providers.gradleProperty("releaseChannel")
+            .map { listOf(if (it == "stable") "default" else "eap") }
+            .orElse(listOf("eap"))
+    }
     pluginVerification {
         ides {
-            create(IntelliJPlatformType.GoLand, minimumGoLandVersion)
-            create(IntelliJPlatformType.GoLand, latestGoLandVersion)
+            if (verifierGoLandVersion.isPresent) {
+                create(IntelliJPlatformType.GoLand, verifierGoLandVersion)
+            } else {
+                create(IntelliJPlatformType.GoLand, minimumGoLandVersion)
+                create(IntelliJPlatformType.GoLand, latestGoLandVersion)
+            }
         }
     }
 }
 
-tasks { test { useJUnitPlatform() } }
+tasks {
+    test { useJUnitPlatform() }
+    withType<AbstractArchiveTask>().configureEach {
+        isPreserveFileTimestamps = false
+        isReproducibleFileOrder = true
+    }
+}
