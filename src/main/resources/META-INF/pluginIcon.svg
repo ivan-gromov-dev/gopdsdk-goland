@@ -1,0 +1,8 @@
+<!-- Canonical gopdsdk-vscode icon, fitted to JetBrains' 40x40 plugin canvas. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="15 21 128 110">
+  <path fill="#808080" stroke="#202326" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d="m102.52 32.92a3 3 0 0 0-1.97 1.17L83.53 57.02a3 3 0 0 0 4.81 3.58l17.03-22.93a3 3 0 0 0-2.85-4.75Z"/>
+  <path fill="#808080" stroke="#202326" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d="M102.96 32.88a3 3 0 0 0 0 6h21.03a3 3 0 0 0 0-6Z"/>
+  <path fill="#ffc900" stroke="#202326" stroke-width="2.5" stroke-linecap="round" d="M51.97 37.17a29.72 29.72 0 0 0-10.08 57.69h-4.68a14.96 14.96 0 0 0 0 29.92h29.52a14.96 14.96 0 0 0 0-29.92h-4.67a29.72 29.72 0 0 0 19.62-27.05 13.07 13.07 0 0 0 4.93-4.13 4.72 4.92 0 0 0 2.42-8.58A13.07 13.07 0 0 0 71 44.01a29.72 29.72 0 0 0-19.03-6.84Zm0 14.63a15.1 15.1 0 1 1 0 30.19 15.1 15.1 0 0 1 0-30.19Zm-10.08 51.77h19.82a6.38 6.38 0 0 1 0 12.76H41.89a6.38 6.38 0 0 1 0-12.76Z"/>
+  <circle cx="51.97" cy="66.9" r="8.09" fill="#18bbd1" stroke="#202326" stroke-width="2.5"/>
+  <rect x="110.52" y="28.77" width="24.27" height="14.22" ry="4.11" fill="#ffc900" stroke="#202326" stroke-width="2.5"/>
+</svg>

@@ -1,4 +1,5 @@
 import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
+import org.gradle.api.tasks.bundling.AbstractArchiveTask
 
 plugins {
     kotlin("jvm") version "2.4.20"
@@ -47,6 +48,17 @@ intellijPlatform {
         }
         vendor { name = "gopdsdk" }
     }
+    signing {
+        certificateChain = providers.environmentVariable("CERTIFICATE_CHAIN")
+        privateKey = providers.environmentVariable("PRIVATE_KEY")
+        password = providers.environmentVariable("PRIVATE_KEY_PASSWORD")
+    }
+    publishing {
+        token = providers.environmentVariable("PUBLISH_TOKEN")
+        channels = providers.gradleProperty("releaseChannel")
+            .map { listOf(if (it == "stable") "default" else "eap") }
+            .orElse(listOf("eap"))
+    }
     pluginVerification {
         ides {
             create(IntelliJPlatformType.GoLand, minimumGoLandVersion)
@@ -55,4 +67,10 @@ intellijPlatform {
     }
 }
 
-tasks { test { useJUnitPlatform() } }
+tasks {
+    test { useJUnitPlatform() }
+    withType<AbstractArchiveTask>().configureEach {
+        isPreserveFileTimestamps = false
+        isReproducibleFileOrder = true
+    }
+}

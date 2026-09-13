@@ -1,4 +1,5 @@
 .gradle/
+.gradle-user/
 .intellijPlatform/
 .kotlin/
 .idea/
@@ -8,3 +9,4 @@ out/
 *.ipr
 *.iws
 .DS_Store
+release-evidence/
