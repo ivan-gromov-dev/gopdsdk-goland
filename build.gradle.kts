@@ -1,5 +1,6 @@
 import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.gradle.api.tasks.bundling.AbstractArchiveTask
+import java.io.File
 
 plugins {
     kotlin("jvm") version "2.4.20"
@@ -13,6 +14,12 @@ val minimumGoLandVersion = providers.gradleProperty("minimumGoLandVersion")
 val latestGoLandVersion = providers.gradleProperty("latestGoLandVersion")
 val platformVersion = providers.gradleProperty("platformVersion")
 val verifierGoLandVersion = providers.gradleProperty("verifierGoLandVersion")
+val certificateChainFile = layout.file(
+    providers.environmentVariable("CERTIFICATE_CHAIN_FILE").map(::File),
+)
+val privateKeyFile = layout.file(
+    providers.environmentVariable("PRIVATE_KEY_FILE").map(::File),
+)
 
 repositories {
     mavenCentral()
@@ -50,8 +57,8 @@ intellijPlatform {
         vendor { name = "gopdsdk" }
     }
     signing {
-        certificateChain = providers.environmentVariable("CERTIFICATE_CHAIN")
-        privateKey = providers.environmentVariable("PRIVATE_KEY")
+        certificateChainFile = certificateChainFile
+        privateKeyFile = privateKeyFile
         password = providers.environmentVariable("PRIVATE_KEY_PASSWORD")
     }
     publishing {

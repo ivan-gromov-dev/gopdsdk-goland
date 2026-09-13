@@ -22,6 +22,10 @@ environments:
 - `PRIVATE_KEY_PASSWORD`: private-key password;
 - `PUBLISH_TOKEN`: JetBrains Marketplace token, required only when publishing.
 
+The workflow writes the certificate and private key to permission-restricted
+files under `RUNNER_TEMP` and passes only their paths to Gradle. This avoids the
+IntelliJ Platform Gradle Plugin limitation with raw multiline signing values.
+
 The `release-package` environment is used for a package-only rehearsal. It needs
 the three signing secrets but not a Marketplace token. Never commit or print
 these values.
