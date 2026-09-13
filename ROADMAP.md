@@ -94,8 +94,8 @@ hosted attestations, and Marketplace publication require external release
 evidence.
 
 - [x] plugin icon, changelog, privacy, security, support, and release policies;
-- [x] signed CI artifacts, dependency review, SBOM, provenance, and reproducible
-  unsigned ZIP verification;
+- [x] signed CI artifacts, strict dependency checksum verification, SBOM,
+  provenance, and reproducible unsigned ZIP verification;
 - [x] guarded EAP and stable JetBrains Marketplace publication workflow;
 - [x] GoLand-only product dependency and supported-range release protocol;
 - [ ] capture real product screenshots and complete live installation, upgrade,

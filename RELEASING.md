@@ -37,6 +37,12 @@ channel `eap` and publishing disabled. It must:
 4. generate its SHA-256, SPDX SBOM, and GitHub provenance/SBOM attestations;
 5. retain the exact signed ZIP and evidence as a workflow artifact.
 
+Pull requests and `master` builds resolve the plugin under Gradle's strict
+dependency verification using the committed SHA-256 metadata. GitHub's
+vulnerability-oriented Dependency Review Action may be added separately after
+Dependency Graph and the required GitHub security feature are enabled for the
+repository; release readiness does not claim that currently unavailable check.
+
 Inspect the artifact and attestations. The first plugin publication must be
 uploaded manually in JetBrains Marketplace. For later versions, re-run with
 publication enabled only after an authorized reviewer approves the target
