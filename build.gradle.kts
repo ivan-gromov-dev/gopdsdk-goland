@@ -14,10 +14,10 @@ val minimumGoLandVersion = providers.gradleProperty("minimumGoLandVersion")
 val latestGoLandVersion = providers.gradleProperty("latestGoLandVersion")
 val platformVersion = providers.gradleProperty("platformVersion")
 val verifierGoLandVersion = providers.gradleProperty("verifierGoLandVersion")
-val certificateChainFile = layout.file(
+val signingCertificateChainFile = layout.file(
     providers.environmentVariable("CERTIFICATE_CHAIN_FILE").map(::File),
 )
-val privateKeyFile = layout.file(
+val signingPrivateKeyFile = layout.file(
     providers.environmentVariable("PRIVATE_KEY_FILE").map(::File),
 )
 
@@ -57,8 +57,8 @@ intellijPlatform {
         vendor { name = "gopdsdk" }
     }
     signing {
-        certificateChainFile = certificateChainFile
-        privateKeyFile = privateKeyFile
+        certificateChainFile = signingCertificateChainFile
+        privateKeyFile = signingPrivateKeyFile
         password = providers.environmentVariable("PRIVATE_KEY_PASSWORD")
     }
     publishing {
