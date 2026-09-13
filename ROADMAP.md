@@ -112,7 +112,128 @@ first stable publication uses the next reviewed patch version.
 Exit criterion: GoLand, VS Code, and CLI expose equivalent rule identifiers,
 diagnostics, and safe fixes without analysis rules in editor clients.
 
-## Later IDE tooling
+## M7 — Simulator workflow
 
-Build, Simulator/device run, logs, deployment, and debugging are separate
-features using structured gopdsdk CLI contracts and separate evidence gates.
+Status: planned. This is the next functional scope after Marketplace EAP
+validation.
+
+- build the active application for Simulator;
+- build and launch it in Playdate Simulator;
+- expose the active Simulator/device analysis target in the status bar;
+- contribute cancellable GoLand run configurations with visible progress and
+  output;
+- convert structured build failures with source locations into GoLand
+  diagnostics;
+- offer focused build/run actions from the toolbar, Run menu, and Playdate tool
+  window.
+
+The plugin must invoke `gopdsdk build` and `gopdsdk run`; it must not reproduce
+build plans, SDK discovery, packaging, or launch policy. An initial slice may
+use console-backed processes. Rich progress, artifact discovery, and reliable
+build diagnostics require a stable machine-readable CLI result from gopdsdk.
+
+Verification: plugin tests with deterministic command fixtures, plus manual
+SDK-integration smoke tests that build and launch an external game in the
+official Simulator on every claimed host platform.
+
+## M8 — Project health and creation
+
+Status: planned.
+
+- present gopdsdk, analyzer-protocol, Playdate SDK, Simulator, device-toolchain,
+  USB connection, module, manifest, and analyzer-configuration readiness in one
+  Project Health surface;
+- attach focused remediation actions to failed checks;
+- create a new game through a guided wrapper around `gopdsdk init`, then open
+  the generated project and offer its first Simulator run;
+- keep raw troubleshooting output available for support.
+
+The health view consumes `gopdsdk doctor` and the relevant `gopdsdk probe`
+commands. A stable structured doctor/probe report is required before the view
+may classify individual checks or attach remediation actions; parsing prose is
+not an accepted integration contract. The project wizard may ship against the
+existing structured command arguments, provided success and the created path
+can be identified without parsing incidental log text.
+
+Verification: unit and sandboxed platform tests for every health state and
+wizard cancel/failure path; SDK, Simulator, USB, and device readiness claims
+require their corresponding external evidence rather than fixtures.
+
+## M9 — Analyzer configuration UX
+
+Status: planned.
+
+- select the analysis target and profile without editing raw settings;
+- browse rules by category, inspect exact-version help, enable or exclude rules,
+  and override severities;
+- add an inline suppression with a required reason from a diagnostic;
+- create, update, inspect, and validate adoption baselines;
+- compare shared, Simulator, and device findings for the same project.
+
+The plugin may edit `.gopdsdk-check.json` and analyzer-owned suppression
+comments, but it must not embed rule semantics or maintain a second rule
+catalog. Rule browsing requires an analyzer-provided versioned catalog API.
+Baseline creation and update require an owned gopdsdk operation with a stable
+schema and deterministic stale-entry behavior. Existing LSP configuration,
+diagnostics, rule help, and safe edits remain the source of truth.
+
+Verification: round-trip configuration fixtures, stale-document rejection,
+multi-module isolation, and parity with equivalent `gopdsdk check` results.
+
+## M10 — Device workflow and logs
+
+Status: planned after the Simulator workflow.
+
+- show explicit device connection state without treating executable discovery
+  as connectivity;
+- build, install, and run the active application on a connected Playdate;
+- expose `crashlog` and `errorlog` in read-only editor tabs;
+- report build, connection, deployment, and launch as distinct progress stages;
+- offer log inspection after a failed run only through an explicit user action
+  or opt-in setting.
+
+The plugin delegates to `gopdsdk build device`, `gopdsdk run device`,
+`gopdsdk probe connection`, `gopdsdk crashlog`, and `gopdsdk errorlog`.
+Reliable connection state, staged progress, and typed failures require stable
+machine-readable command results from gopdsdk. Device logs remain
+user-requested evidence and must not be read silently by project opening or
+background polling.
+
+Verification: command-fixture and cancellation coverage first, followed by
+separately labeled device-build, USB, and physical-device acceptance. Simulator
+or sandboxed IDE tests do not establish device readiness.
+
+## M11 — Playdate tool window
+
+Status: planned after the underlying actions are stable.
+
+Add a Playdate tool window that summarizes the active project, selected target,
+gopdsdk and Playdate SDK versions, health state, device connection, build/run
+actions, logs, and diagnostic counts. The view is a projection of the M7–M10
+contracts, not an independent implementation of discovery, analysis, or device
+behavior.
+
+Verification: multi-module selection, refresh, accessibility,
+empty/loading/error states, action routing, and consistency with the status bar,
+Problems view, and Run tool window.
+
+## Required gopdsdk contracts
+
+The first console-backed Simulator build/run slice and a basic `gopdsdk init`
+wizard can be implemented with the current CLI. The complete roadmap requires
+compatible additions to gopdsdk before the corresponding rich UI is considered
+stable:
+
+- versioned JSON results for build, run, doctor, Simulator/device probes, USB
+  connection, device deployment, and log retrieval;
+- structured source locations, artifact paths, typed failure categories, and
+  cancellable progress events where those concepts apply;
+- a versioned analyzer rule-catalog endpoint rather than a catalog copied into
+  the plugin;
+- deterministic baseline create/update/validate operations;
+- explicit capability negotiation so older gopdsdk releases degrade to the
+  supported subset instead of being parsed heuristically.
+
+These are tooling-contract additions, not changes to the native public
+`playdate` API. Each new contract must be implemented and versioned in gopdsdk
+before the GoLand client depends on it.
