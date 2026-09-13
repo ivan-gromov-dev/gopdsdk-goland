@@ -61,15 +61,23 @@ jobs:
       - name: Verify reproducible unsigned ZIP
         shell: bash
         run: bash scripts/verify-reproducible.sh
-      - name: Sign plugin
+      - name: Prepare signing files
+        shell: bash
         env:
           CERTIFICATE_CHAIN: ${{ secrets.CERTIFICATE_CHAIN }}
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+        run: |
+          umask 077
+          mkdir -p "$RUNNER_TEMP/gopdsdk-signing"
+          printf '%s\n' "$CERTIFICATE_CHAIN" > "$RUNNER_TEMP/gopdsdk-signing/chain.crt"
+          printf '%s\n' "$PRIVATE_KEY" > "$RUNNER_TEMP/gopdsdk-signing/private.pem"
+          echo "CERTIFICATE_CHAIN_FILE=$RUNNER_TEMP/gopdsdk-signing/chain.crt" >> "$GITHUB_ENV"
+          echo "PRIVATE_KEY_FILE=$RUNNER_TEMP/gopdsdk-signing/private.pem" >> "$GITHUB_ENV"
+      - name: Sign plugin
+        env:
           PRIVATE_KEY_PASSWORD: ${{ secrets.PRIVATE_KEY_PASSWORD }}
         run: ./gradlew signPlugin
       - name: Verify plugin signature
-        env:
-          CERTIFICATE_CHAIN: ${{ secrets.CERTIFICATE_CHAIN }}
         run: ./gradlew verifyPluginSignature
       - name: Stage signed artifact
         shell: bash
@@ -98,8 +106,6 @@ jobs:
       - name: Publish to JetBrains Marketplace
         if: inputs.publish
         env:
-          CERTIFICATE_CHAIN: ${{ secrets.CERTIFICATE_CHAIN }}
-          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
           PRIVATE_KEY_PASSWORD: ${{ secrets.PRIVATE_KEY_PASSWORD }}
           PUBLISH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
         run: ./gradlew publishPlugin "-PreleaseChannel=${{ inputs.channel }}"
