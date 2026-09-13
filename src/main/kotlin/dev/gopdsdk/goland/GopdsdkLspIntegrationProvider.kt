@@ -11,6 +11,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.platform.lsp.api.LspIntegrationProvider
 import com.intellij.platform.lsp.api.ProjectWideLspClientDescriptor
+import com.intellij.platform.lsp.api.customization.LspCustomization
 
 internal class GopdsdkLspIntegrationProvider : LspIntegrationProvider {
     override fun fileOpened(
@@ -30,6 +31,8 @@ private class GopdsdkLspClientDescriptor(project: Project) :
 
     override fun createInitializationOptions(): Any =
         GopdsdkSettings.getInstance(project).state.analyzerSettings()
+
+    override val lspCustomization: LspCustomization = GopdsdkLspCustomization
 
     override fun createCommandLine(): GeneralCommandLine {
         val configured = GopdsdkSettings.getInstance(project).state.executablePath

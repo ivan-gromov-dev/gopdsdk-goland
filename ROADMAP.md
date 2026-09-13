@@ -44,13 +44,24 @@ Verification: parity with equivalent `gopdsdk check` executions.
 
 ## M4 — Diagnostic UX
 
-- related locations, stable rule identifiers, and rule help;
-- preview and apply only analyzer-provided safe fixes;
-- restart, refresh, logs, and troubleshooting actions;
-- graceful coexistence with the bundled Go plugin.
+Status: complete; manual cross-platform editor smoke confirmation remains.
+
+- [x] related locations, stable rule identifiers, and rule help;
+- [x] preview and apply only analyzer-provided safe fixes;
+- [x] restart, refresh, logs, and troubleshooting actions;
+- [x] graceful coexistence with the bundled Go plugin.
 
 Verification: platform and sandboxed UI tests for edits, saves, stale versions,
 clearing, cancellation, fixes, and multi-module projects.
+
+The plugin delegates diagnostic rendering, related locations, versioned
+documentation links, document synchronization, cancellation, stale-version
+handling, edit previews, and edit application to the native IntelliJ LSP
+client. Its customization rejects command-backed, foreign, and non-quick-fix
+actions, so only analyzer-provided edit-only safe fixes are exposed. The Tools
+menu adds refresh, restart, Language Services logs, and troubleshooting actions;
+the plugin continues to own no general Go language feature alongside the
+bundled Go plugin.
 
 ## M5 — Reliability
 

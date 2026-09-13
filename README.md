@@ -31,6 +31,12 @@ project settings. Applying those settings refreshes a running server without a
 restart; comma-separated fields use the same identifiers and workspace-relative
 paths as `gopdsdk check`, and severity entries use `selector=severity`.
 
+The **Tools | gopdsdk** menu provides diagnostic refresh, server restart,
+Language Services logs, and focused troubleshooting. Diagnostic rule links,
+related locations, edit previews, cancellation, and document-version handling
+use the native IntelliJ LSP client. The plugin filters code actions so only
+`gopdsdk` edit-only quick fixes are offered.
+
 ## Development
 
 ```text

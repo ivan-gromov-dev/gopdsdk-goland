@@ -13,4 +13,13 @@
         <projectConfigurable parentId="tools" instance="dev.gopdsdk.goland.GopdsdkConfigurable" id="dev.gopdsdk.settings" displayName="gopdsdk"/>
         <notificationGroup id="gopdsdk" displayType="BALLOON"/>
     </extensions>
+    <actions>
+        <group id="gopdsdk.actions" text="gopdsdk" popup="true">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+            <action id="gopdsdk.refreshDiagnostics" class="dev.gopdsdk.goland.GopdsdkRefreshAction" text="Refresh Diagnostics"/>
+            <action id="gopdsdk.restartServer" class="dev.gopdsdk.goland.GopdsdkRestartAction" text="Restart Language Server"/>
+            <action id="gopdsdk.showLogs" class="dev.gopdsdk.goland.GopdsdkShowLogsAction" text="Show Language Server Logs"/>
+            <action id="gopdsdk.troubleshoot" class="dev.gopdsdk.goland.GopdsdkTroubleshootAction" text="Troubleshoot"/>
+        </group>
+    </actions>
 </idea-plugin>
