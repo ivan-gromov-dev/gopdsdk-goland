@@ -5,11 +5,12 @@ tag, or packaged artifact does not by itself authorize Marketplace publication.
 
 ## Version and channels
 
-The first release is `0.1.0` and must be built from the immutable `v0.1.0` tag.
-Submit the signed artifact to the `eap` channel first. After approval and live
-validation, increment the patch version, repeat every gate, and publish that
-distinct artifact to the default channel. JetBrains Marketplace does not accept
-multiple artifacts with the same version.
+Every release must be built from the immutable `v<version>` tag matching
+`build.gradle.kts`. Submit a signed artifact to the `eap` channel first. After
+approval and live validation, publish that same version to the default channel
+only when Marketplace permits promotion; otherwise increment the patch version
+and repeat every gate. JetBrains Marketplace does not accept multiple artifacts
+with the same version.
 
 ## Repository setup
 
@@ -32,8 +33,8 @@ these values.
 
 ## Automated gates
 
-Run the `Package GoLand plugin` workflow from tag `v0.1.0`, initially with
-channel `eap` and publishing disabled. It must:
+Run the `Package GoLand plugin` workflow from the matching immutable version
+tag, initially with channel `eap` and publishing disabled. It must:
 
 1. run Plugin Verifier against GoLand 2026.1.4 and 2026.2 in isolated jobs, then
    run unit tests in the packaging job;

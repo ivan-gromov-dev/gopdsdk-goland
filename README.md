@@ -50,6 +50,15 @@ related locations, edit previews, cancellation, and document-version handling
 use the native IntelliJ LSP client. The plugin filters code actions so only
 `gopdsdk` edit-only quick fixes are offered.
 
+The Playdate tool window includes **Project Health**, combining executable and
+analyzer compatibility, module and manifest files, analyzer configuration, the
+Playdate SDK, Simulator, device toolchain, and USB connection readiness. It
+consumes only the versioned JSON `doctor` and `probe` contracts, exposes the raw
+troubleshooting output, and keeps discovery distinct from verified readiness.
+**Tools | gopdsdk | New Playdate Game…** wraps `gopdsdk init`; cancellation and
+failure leave the target unopened, while success opens the generated project
+and points to the first Simulator run.
+
 ## Development
 
 Keep local feedback lightweight:
