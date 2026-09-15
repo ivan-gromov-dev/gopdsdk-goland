@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Added cancellable Playdate Simulator build and run configurations.
+- Added Simulator actions to the toolbar, Run menu, and Playdate tool window.
+- Added analysis/execution target status, structured progress handling, and
+  editor diagnostics for structured build failures.
+
 All notable user-visible changes are recorded here. Release claims distinguish
 plugin-unit, editor-integration, SDK, Simulator, USB, and physical-device
 evidence.
