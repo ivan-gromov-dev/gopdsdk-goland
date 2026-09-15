@@ -145,7 +145,7 @@ official Simulator on every claimed host platform.
 
 ## M8 — Project health and creation
 
-Status: planned.
+Status: implementation complete; plugin-unit CI and external readiness evidence remain.
 
 - present gopdsdk, analyzer-protocol, Playdate SDK, Simulator, device-toolchain,
   USB connection, module, manifest, and analyzer-configuration readiness in one

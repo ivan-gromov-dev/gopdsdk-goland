@@ -189,13 +189,17 @@ internal class SimulatorWorkflowState(private val project: Project) {
 internal abstract class SimulatorAction(private val operation: SimulatorOperation) : AnAction(), DumbAware {
     override fun actionPerformed(event: AnActionEvent) {
         val project = event.project ?: return
-        val type = com.intellij.execution.configurations.ConfigurationTypeUtil.findConfigurationType(SimulatorConfigurationType::class.java)
-        val factory = type.configurationFactories.single()
-        val configuration = SimulatorRunConfiguration(project, factory, operation.displayName).apply { this.operation = this@SimulatorAction.operation }
-        val settings = com.intellij.execution.RunManager.getInstance(project).createConfiguration(configuration, factory)
-        settings.isTemporary = true
-        ProgramRunnerUtil.executeConfiguration(settings, com.intellij.execution.executors.DefaultRunExecutor.getRunExecutorInstance())
+        executeSimulator(project, operation)
     }
+}
+
+internal fun executeSimulator(project: Project, operation: SimulatorOperation) {
+    val type = com.intellij.execution.configurations.ConfigurationTypeUtil.findConfigurationType(SimulatorConfigurationType::class.java)
+    val factory = type.configurationFactories.single()
+    val configuration = SimulatorRunConfiguration(project, factory, operation.displayName).apply { this.operation = operation }
+    val settings = com.intellij.execution.RunManager.getInstance(project).createConfiguration(configuration, factory)
+    settings.isTemporary = true
+    ProgramRunnerUtil.executeConfiguration(settings, com.intellij.execution.executors.DefaultRunExecutor.getRunExecutorInstance())
 }
 
 internal class BuildSimulatorAction : SimulatorAction(SimulatorOperation.BUILD)
