@@ -114,8 +114,9 @@ diagnostics, and safe fixes without analysis rules in editor clients.
 
 ## M7 — Simulator workflow
 
-Status: planned. This is the next functional scope after Marketplace EAP
-validation.
+Status: implemented. Automated plugin-unit and compatibility verification cover
+the command contract and UI registrations. Live SDK-integration evidence remains
+a release gate on each claimed host platform.
 
 - build the active application for Simulator;
 - build and launch it in Playdate Simulator;
@@ -126,6 +127,12 @@ validation.
   diagnostics;
 - offer focused build/run actions from the toolbar, Run menu, and Playdate tool
   window.
+
+The implementation contributes saved and temporary Playdate Simulator run
+configurations, delegates only to the versioned structured `build`/`run`
+contracts, maps progress into the status bar and Run console, and publishes
+source locations through an external annotator. Process ownership and
+cancellation remain with the IntelliJ execution framework and gopdsdk.
 
 The plugin must invoke `gopdsdk build` and `gopdsdk run`; it must not reproduce
 build plans, SDK discovery, packaging, or launch policy. An initial slice may
@@ -188,12 +195,15 @@ Status: planned after the Simulator workflow.
   as connectivity;
 - build, install, and run the active application on a connected Playdate;
 - expose `crashlog` and `errorlog` in read-only editor tabs;
+- expose explicit Data Disk mount and safe-eject actions, keep disk mode as a
+  distinct connection state, and confirm USB reconnection after eject;
 - report build, connection, deployment, and launch as distinct progress stages;
 - offer log inspection after a failed run only through an explicit user action
   or opt-in setting.
 
 The plugin delegates to `gopdsdk build device`, `gopdsdk run device`,
-`gopdsdk probe connection`, `gopdsdk crashlog`, and `gopdsdk errorlog`.
+`gopdsdk probe connection`, `gopdsdk crashlog`, `gopdsdk errorlog`, and the
+versioned `gopdsdk device disk mount|unmount` operations.
 Reliable connection state, staged progress, and typed failures require stable
 machine-readable command results from gopdsdk. Device logs remain
 user-requested evidence and must not be read silently by project opening or
@@ -225,7 +235,7 @@ compatible additions to gopdsdk before the corresponding rich UI is considered
 stable:
 
 - versioned JSON results for build, run, doctor, Simulator/device probes, USB
-  connection, device deployment, and log retrieval;
+  connection, device deployment, log retrieval, and Data Disk mount/unmount;
 - structured source locations, artifact paths, typed failure categories, and
   cancellable progress events where those concepts apply;
 - a versioned analyzer rule-catalog endpoint rather than a catalog copied into

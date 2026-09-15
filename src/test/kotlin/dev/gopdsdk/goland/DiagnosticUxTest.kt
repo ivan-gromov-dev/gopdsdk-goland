@@ -24,6 +24,8 @@ class DiagnosticUxTest {
             "gopdsdk.restartServer",
             "gopdsdk.showLogs",
             "gopdsdk.troubleshoot",
+            "gopdsdk.buildSimulator",
+            "gopdsdk.runSimulator",
         )))
     }
 

@@ -6,6 +6,11 @@ device readiness.
 
 ## Automated session
 
+For normal local development, run the focused or full `test` task only. The
+repository CI owns cross-platform plugin packaging and the GoLand compatibility
+matrix; SDK/Simulator and live-editor procedures remain CI/release gates rather
+than default local checks.
+
 Run:
 
 ```text

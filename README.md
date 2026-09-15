@@ -19,6 +19,11 @@ are documented in [RELEASING.md](RELEASING.md).
 
 ## Requirements
 
+The planned device workflow requires versioned `gopdsdk device disk
+mount|unmount` results so the plugin can explicitly enter Data Disk mode, safely
+eject it, and confirm the return to a connected USB state. This is a roadmap
+requirement only; the GoLand client does not implement the commands yet.
+
 - GoLand 2026.1.4 through 2026.2;
 - JDK 21 for development (the Gradle wrapper can provision it automatically);
 - `gopdsdk` with the `lsp` command on PATH.
@@ -31,19 +36,36 @@ project settings. Applying those settings refreshes a running server without a
 restart; comma-separated fields use the same identifiers and workspace-relative
 paths as `gopdsdk check`, and severity entries use `selector=severity`.
 
-The **Tools | gopdsdk** menu provides diagnostic refresh, server restart,
-Language Services logs, and focused troubleshooting. Diagnostic rule links,
+The **Tools | gopdsdk** menu also provides **Build for Simulator** and **Build
+and Run in Simulator**. The same actions are available from the Run menu, main
+toolbar, and Playdate tool window. They create cancellable temporary run
+configurations backed by `gopdsdk build` or `gopdsdk run`; saved **Playdate
+Simulator** configurations can select a package and build-only or build-and-run
+behavior. Structured CLI progress appears in the status bar, output remains in
+the Run console, and structured build locations become editor errors.
+
+The menu also provides diagnostic refresh, server restart, Language Services
+logs, and focused troubleshooting. Diagnostic rule links,
 related locations, edit previews, cancellation, and document-version handling
 use the native IntelliJ LSP client. The plugin filters code actions so only
 `gopdsdk` edit-only quick fixes are offered.
 
 ## Development
 
+Keep local feedback lightweight:
+
+```text
+./gradlew test
+```
+
+The multi-platform `buildPlugin`, strict dependency resolution, and Plugin
+Verifier matrix are CI-owned because they download and unpack multiple full
+GoLand distributions. SDK/Simulator smoke tests are also external CI or release
+evidence; do not run those long checks locally unless investigating a CI-only
+failure.
+
 ```text
 ./gradlew runIde
-./gradlew test
-./gradlew buildPlugin
-./gradlew verifyPlugin
 ```
 
 The default build targets the oldest supported GoLand release. To exercise the

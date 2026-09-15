@@ -57,6 +57,7 @@ internal class GopdsdkConfigurable(private val project: Project) : Configurable 
         if (updated == settings.state) return
         val executableChanged = updated.executablePath != settings.state.executablePath
         settings.loadState(updated)
+        SimulatorWorkflowState.getInstance(project).refresh()
         val clients = LspClientManager.getInstance(project)
         if (executableChanged) {
             clients.stopAndRestartClientsIfNeeded(GopdsdkLspIntegrationProvider::class.java)
