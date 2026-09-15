@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "dev.gopdsdk"
-version = "0.2.0"
+version = "0.3.0"
 
 val minimumGoLandVersion = providers.gradleProperty("minimumGoLandVersion")
 val latestGoLandVersion = providers.gradleProperty("latestGoLandVersion")
@@ -41,7 +41,12 @@ dependencies {
     testRuntimeOnly("junit:junit:4.13.2")
 }
 
-kotlin { jvmToolchain(21) }
+kotlin {
+    jvmToolchain(21)
+    // Use IntelliJ's JVM interface defaults directly. Compatibility bridges
+    // otherwise introduce calls to deprecated/experimental platform methods.
+    compilerOptions { jvmDefault.set(org.jetbrains.kotlin.gradle.dsl.JvmDefaultMode.NO_COMPATIBILITY) }
+}
 
 intellijPlatform {
     buildSearchableOptions = false

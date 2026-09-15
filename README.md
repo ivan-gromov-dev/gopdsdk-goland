@@ -10,7 +10,7 @@ logic, severity decisions, or edit generation from gopdsdk.
 ## Status
 
 This repository contains a reproducible IntelliJ Platform plugin scaffold and a
-project-wide LSP integration with a project-specific executable setting. It
+module-scoped LSP integration with a project-specific executable setting. It
 prefers that explicit path and otherwise discovers `gopdsdk` deterministically
 on PATH. Before starting the editor server, the plugin runs a bounded LSP
 version/capability probe and reports configuration or compatibility failures
@@ -58,6 +58,36 @@ troubleshooting output, and keeps discovery distinct from verified readiness.
 **Tools | gopdsdk | New Playdate Game…** wraps `gopdsdk init`; cancellation and
 failure leave the target unopened, while success opens the generated project
 and points to the first Simulator run.
+
+## Analyzer configuration and adoption
+
+Select a file in the desired Go module and open **Tools | gopdsdk | Analyzer
+Configuration and Findings…**. The dialog stays bound to that module:
+
+- Save the analysis target and default, experimental, or deep profile.
+- Load the executing analyzer's rule catalog, filter by category, inspect
+  exact-version help, enable/exclude a rule, or override its severity.
+- Create, update, inspect, or validate a baseline, including stale entries.
+- Compare shared, Simulator, and device findings and navigate to their sources.
+
+Configuration changes update `.gopdsdk-check.json` and the module's LSP settings
+using the same projection as the VS Code extension. The experimental profile
+uses rule IDs from the analyzer catalog; deep analysis remains opt-in. Modules
+without overrides inherit the project settings. Older servers remain responsible
+for which configuration fields they honor.
+
+Use **Suppress … with reason…** on an editor diagnostic, or select a comparison
+finding and choose **Suppress with reason…**. The plugin requires a reason,
+checks the analyzer's suppression policy, rejects stale source, and saves an
+undoable `//gopdsdk:ignore` comment. Rule help is requested from the running
+module language server; open a Go file first.
+
+Comparison runs the same three CLI target checks as VS Code and bypasses
+baseline filtering. Baseline creation/update uses a fresh report and delegates
+identity matching and stale-entry behavior to gopdsdk. Check operations save
+open documents before reading files; command cancellation is available in IDE
+progress. These features require the versioned catalog, check, and baseline
+contracts advertised by `gopdsdk capabilities`.
 
 ## Development
 

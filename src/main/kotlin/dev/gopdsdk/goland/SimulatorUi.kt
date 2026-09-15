@@ -3,6 +3,9 @@ package dev.gopdsdk.goland
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.DefaultActionGroup
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.fileEditor.FileEditorManager
+import com.intellij.openapi.fileEditor.FileEditorManagerEvent
+import com.intellij.openapi.fileEditor.FileEditorManagerListener
 import com.intellij.openapi.wm.StatusBar
 import com.intellij.openapi.wm.StatusBarWidget
 import com.intellij.openapi.wm.StatusBarWidgetFactory
@@ -28,10 +31,20 @@ internal class SimulatorStatusBarWidgetFactory : StatusBarWidgetFactory {
     private class Widget(private val project: Project) : StatusBarWidget, StatusBarWidget.TextPresentation {
         override fun ID(): String = "gopdsdk.simulator.target"
         override fun getPresentation(): StatusBarWidget.WidgetPresentation = this
-        override fun getText(): String = "Analysis: ${GopdsdkSettings.getInstance(project).state.target} | ${SimulatorWorkflowState.getInstance(project).text}"
+        override fun getText(): String {
+            val file = FileEditorManager.getInstance(project).selectedFiles.firstOrNull()
+            val root = generateSequence(file?.parent) { it.parent }.firstOrNull { it.findChild("go.mod") != null }
+            val settings = root?.let { AnalyzerModuleSettings.settings(project, java.nio.file.Path.of(it.path)) }
+                ?: GopdsdkSettings.getInstance(project).state
+            return "Analysis: ${settings.target} | ${SimulatorWorkflowState.getInstance(project).text}"
+        }
         override fun getTooltipText(): String = "Active gopdsdk analysis and execution target: Simulator"
         override fun getAlignment(): Float = 0.5f
-        override fun install(statusBar: StatusBar) = Unit
+        override fun install(statusBar: StatusBar) {
+            project.messageBus.connect(this).subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, object : FileEditorManagerListener {
+                override fun selectionChanged(event: FileEditorManagerEvent) { statusBar.updateWidget(ID()) }
+            })
+        }
         override fun dispose() = Unit
     }
 }

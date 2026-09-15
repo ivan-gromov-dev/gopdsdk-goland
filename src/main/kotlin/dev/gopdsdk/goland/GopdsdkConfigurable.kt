@@ -10,7 +10,6 @@ import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.JBTextField
 import com.intellij.util.ui.FormBuilder
-import org.eclipse.lsp4j.DidChangeConfigurationParams
 import javax.swing.JComponent
 import javax.swing.JComboBox
 import javax.swing.JPanel
@@ -62,12 +61,7 @@ internal class GopdsdkConfigurable(private val project: Project) : Configurable 
         if (executableChanged) {
             clients.stopAndRestartClientsIfNeeded(GopdsdkLspIntegrationProvider::class.java)
         } else {
-            val analyzerSettings = updated.analyzerSettings()
-            clients.getClients(GopdsdkLspIntegrationProvider::class.java).forEach { client ->
-                client.sendNotification { server ->
-                    server.workspaceService.didChangeConfiguration(DidChangeConfigurationParams(analyzerSettings))
-                }
-            }
+            AnalyzerModuleSettings.refresh(project)
         }
     }
 

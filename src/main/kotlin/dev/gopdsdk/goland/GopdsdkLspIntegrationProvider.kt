@@ -10,8 +10,13 @@ import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.platform.lsp.api.LspIntegrationProvider
-import com.intellij.platform.lsp.api.ProjectWideLspClientDescriptor
+import com.intellij.platform.lsp.api.LspClientDescriptor
 import com.intellij.platform.lsp.api.customization.LspCustomization
+import java.nio.file.Path
+import org.eclipse.lsp4j.services.LanguageServer
+import org.eclipse.lsp4j.jsonrpc.services.JsonRequest
+import java.util.concurrent.CompletableFuture
+import com.google.gson.JsonObject
 
 internal class GopdsdkLspIntegrationProvider : LspIntegrationProvider {
     override fun fileOpened(
@@ -20,17 +25,27 @@ internal class GopdsdkLspIntegrationProvider : LspIntegrationProvider {
             clientStarter: LspIntegrationProvider.LspClientStarter,
     ) {
         if (file.extension == "go") {
-            clientStarter.ensureClientStarted(GopdsdkLspClientDescriptor(project))
+            val root = generateSequence(file.parent) { it.parent }.firstOrNull { it.findChild("go.mod") != null } ?: return
+            clientStarter.ensureClientStarted(GopdsdkLspClientDescriptor(project, root))
         }
     }
 }
 
-private class GopdsdkLspClientDescriptor(project: Project) :
-        ProjectWideLspClientDescriptor(project, "gopdsdk") {
-    override fun isSupportedFile(file: VirtualFile): Boolean = file.extension == "go"
+internal interface GopdsdkLanguageServer : LanguageServer {
+    @JsonRequest("gopdsdk/ruleHelp")
+    fun ruleHelp(params: Map<String, String>): CompletableFuture<JsonObject>
+}
+
+internal class GopdsdkLspClientDescriptor(project: Project, private val root: VirtualFile) :
+        LspClientDescriptor(project, "gopdsdk (${root.name})", root) {
+    val moduleRoot: Path get() = Path.of(root.path)
+    override fun isSupportedFile(file: VirtualFile): Boolean = file.extension == "go" &&
+        generateSequence(file.parent) { it.parent }.firstOrNull { it.findChild("go.mod") != null } == root
+
+    override val lsp4jServerClass: Class<out LanguageServer> = GopdsdkLanguageServer::class.java
 
     override fun createInitializationOptions(): Any =
-        GopdsdkSettings.getInstance(project).state.analyzerSettings()
+        AnalyzerModuleSettings.settings(project, moduleRoot).analyzerSettings()
 
     override val lspCustomization: LspCustomization = GopdsdkLspCustomization
 
@@ -42,9 +57,9 @@ private class GopdsdkLspClientDescriptor(project: Project) :
             } else {
                 "The configured gopdsdk executable is unavailable. Choose a valid executable in Settings | Tools | gopdsdk."
             })
-        val result = LspProbe.probe(executable, project.basePath)
+        val result = LspProbe.probe(executable, root.path)
         if (result !is ProbeResult.Compatible) throw failure(result.message)
-        return GeneralCommandLine(executable.toString(), "lsp").withWorkDirectory(project.basePath)
+        return GeneralCommandLine(executable.toString(), "lsp").withWorkDirectory(root.path)
     }
 
     override fun startServerProcess(): BaseProcessHandler<*> = try {

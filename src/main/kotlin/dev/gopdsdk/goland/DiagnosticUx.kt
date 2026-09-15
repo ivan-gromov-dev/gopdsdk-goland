@@ -25,6 +25,7 @@ import org.eclipse.lsp4j.DidChangeConfigurationParams
 
 internal object GopdsdkLspCustomization : LspCustomization() {
     override val codeActionsCustomizer: LspCodeActionsCustomizer = SafeCodeActions
+    override val diagnosticsCustomizer = AnalyzerDiagnosticsSupport()
 }
 
 private object SafeCodeActions : LspCodeActionsSupport() {
@@ -72,10 +73,7 @@ internal class GopdsdkRestartAction : AnAction(), DumbAware {
 internal class GopdsdkRefreshAction : AnAction(), DumbAware {
     override fun actionPerformed(event: AnActionEvent) {
         val project = event.project ?: return
-        GopdsdkActions.refresh(
-            LspClientManager.getInstance(project),
-            GopdsdkSettings.getInstance(project).state.analyzerSettings(),
-        )
+        AnalyzerModuleSettings.refresh(project)
     }
 }
 

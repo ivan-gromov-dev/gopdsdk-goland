@@ -168,7 +168,8 @@ require their corresponding external evidence rather than fixtures.
 
 ## M9 — Analyzer configuration UX
 
-Status: planned.
+Status: implementation complete; full compatibility CI and live editor parity
+evidence remain.
 
 - select the analysis target and profile without editing raw settings;
 - browse rules by category, inspect exact-version help, enable or exclude rules,
@@ -186,6 +187,23 @@ diagnostics, rule help, and safe edits remain the source of truth.
 
 Verification: round-trip configuration fixtures, stale-document rejection,
 multi-module isolation, and parity with equivalent `gopdsdk check` results.
+
+**Tools | gopdsdk | Analyzer Configuration and Findings…** edits the selected
+Go module's configuration and synchronizes its dedicated LSP client. Behavior
+follows the VS Code client: default/experimental/deep profiles, catalog-derived
+experimental rule IDs, rule selection/exclusion, severity overrides, exact-version
+`gopdsdk/ruleHelp`, and baseline create/update/inspect/validate operations.
+Editor diagnostics offer a reasoned suppression intention; policy is verified
+against the executing analyzer and changed documents are rejected before editing.
+Comparison invokes `check` separately for shared, Simulator, and device, disables
+baseline filtering, and deduplicates the returned findings without changing rule
+semantics. Baseline identities and stale entries remain analyzer-owned.
+
+Local evidence: Kotlin compilation and focused plugin-unit fixtures for config
+round trips, VS Code LSP projection parity, module isolation, stale suppression,
+catalog/capability schemas, baseline results, and comparison merging. The full
+three-platform/two-GoLand CI matrix and live editor checks were not run locally.
+This is not SDK, Simulator, USB, or physical-device evidence.
 
 ## M10 — Device workflow and logs
 
