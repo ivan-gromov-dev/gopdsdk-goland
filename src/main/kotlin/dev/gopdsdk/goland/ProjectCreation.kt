@@ -75,17 +75,15 @@ internal class NewGameDialog(project: Project) : DialogWrapper(project) {
 
     override fun createCenterPanel(): JComponent = JPanel(GridBagLayout()).apply {
         val c = GridBagConstraints().apply { fill = GridBagConstraints.HORIZONTAL; weightx = 1.0; gridx = 0 }
-        val fields: List<Pair<String, JComponent>> = listOf(
-            "Project directory" to path,
-            "Go module" to module,
-            "Game name" to name,
-            "Author" to author,
-            "Bundle ID" to bundleID,
-        )
-        fields.forEachIndexed { index, (label, field) ->
+        fun addRow(index: Int, label: String, field: JComponent) {
             add(JBLabel(label), c.apply { gridy = index * 2 })
             add(field, c.apply { gridy = index * 2 + 1 })
         }
+        addRow(0, "Project directory", path)
+        addRow(1, "Go module", module)
+        addRow(2, "Game name", name)
+        addRow(3, "Author", author)
+        addRow(4, "Bundle ID", bundleID)
     }
 }
 
