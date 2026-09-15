@@ -75,7 +75,14 @@ internal class NewGameDialog(project: Project) : DialogWrapper(project) {
 
     override fun createCenterPanel(): JComponent = JPanel(GridBagLayout()).apply {
         val c = GridBagConstraints().apply { fill = GridBagConstraints.HORIZONTAL; weightx = 1.0; gridx = 0 }
-        listOf("Project directory" to path, "Go module" to module, "Game name" to name, "Author" to author, "Bundle ID" to bundleID).forEachIndexed { index, (label, field) ->
+        val fields: List<Pair<String, JComponent>> = listOf(
+            "Project directory" to path,
+            "Go module" to module,
+            "Game name" to name,
+            "Author" to author,
+            "Bundle ID" to bundleID,
+        )
+        fields.forEachIndexed { index, (label, field) ->
             add(JBLabel(label), c.apply { gridy = index * 2 })
             add(field, c.apply { gridy = index * 2 + 1 })
         }
@@ -101,7 +108,7 @@ internal class NewPlaydateGameAction : AnAction(), DumbAware {
                         val createdProject = ProjectManagerEx.getInstanceEx().openProject(Path.of(outcome.path), com.intellij.ide.impl.OpenProjectTask())
                         val notification = NotificationGroupManager.getInstance().getNotificationGroup("gopdsdk")
                             .createNotification("Playdate game created", "The project is ready. Use Build and Run in Simulator for its first run.", NotificationType.INFORMATION)
-                        if (createdProject != null) notification.addAction(NotificationAction.createSimpleExpiring("Run in Simulator") { _, _ ->
+                        if (createdProject != null) notification.addAction(NotificationAction.createSimpleExpiring("Run in Simulator") {
                             executeSimulator(createdProject, SimulatorOperation.RUN)
                         })
                         notification.notify(createdProject ?: project)
