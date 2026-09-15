@@ -18,7 +18,7 @@ internal class BuildDiagnostics(private val project: Project) {
 
     fun replace(failure: ToolFailure?) {
         current = failure?.locations.orEmpty().map { BuildDiagnostic(it, "gopdsdk build: ${failure?.category}") }
-        DaemonCodeAnalyzer.getInstance(project).restart()
+        DaemonCodeAnalyzer.getInstance(project).restart("gopdsdk build diagnostics changed")
     }
 
     fun forFile(file: PsiFile): List<BuildDiagnostic> {

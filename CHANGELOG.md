@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+## 0.3.0 — 2026-09-15
+
+- Removed generated Kotlin compatibility bridges to deprecated/experimental
+  IntelliJ interface methods reported by Marketplace for 0.2.0. Build diagnostic
+  refresh now uses the supported daemon restart overload with an explicit reason.
+- Added M9 Analyzer Configuration and Findings for the selected Go module:
+  target/profile selection, analyzer-owned rule catalog, exact-version LSP help,
+  rule enable/exclude controls, and severity overrides.
+- Matched VS Code's analyzer settings projection, including catalog-derived
+  experimental profiles, with persistent per-module LSP settings and clients.
+- Added reasoned suppressions from editor diagnostics and comparison findings,
+  with analyzer policy checks, stale-source rejection, and undoable edits.
+- Added baseline create/update/inspect/validate and shared/Simulator/device
+  comparison through the versioned gopdsdk CLI contracts.
+
+Evidence: focused plugin-unit tests and Kotlin compilation on Windows. Full
+compatibility/OS CI and live editor parity remain external evidence; no SDK,
+Simulator, USB, or physical-device claim is made.
+
 ## 0.2.0 — 2026-09-15
 
 - Added a Project Health surface for structured doctor/probe readiness,

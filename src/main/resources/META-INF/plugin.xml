@@ -26,6 +26,7 @@
             <action id="gopdsdk.showLogs" class="dev.gopdsdk.goland.GopdsdkShowLogsAction" text="Show Language Server Logs"/>
             <action id="gopdsdk.troubleshoot" class="dev.gopdsdk.goland.GopdsdkTroubleshootAction" text="Troubleshoot"/>
             <action id="gopdsdk.newGame" class="dev.gopdsdk.goland.NewPlaydateGameAction" text="New Playdate Game…"/>
+            <action id="gopdsdk.analyzer" class="dev.gopdsdk.goland.AnalyzerAdministrationAction" text="Analyzer Configuration and Findings…"/>
             <separator/>
             <action id="gopdsdk.buildSimulator" class="dev.gopdsdk.goland.BuildSimulatorAction" text="Build for Simulator" icon="AllIcons.Actions.Compile"/>
             <action id="gopdsdk.runSimulator" class="dev.gopdsdk.goland.RunSimulatorAction" text="Build and Run in Simulator" icon="AllIcons.Actions.Execute"/>

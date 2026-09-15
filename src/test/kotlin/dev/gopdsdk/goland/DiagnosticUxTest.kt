@@ -26,6 +26,7 @@ class DiagnosticUxTest {
             "gopdsdk.troubleshoot",
             "gopdsdk.buildSimulator",
             "gopdsdk.runSimulator",
+            "gopdsdk.analyzer",
         )))
     }
 
