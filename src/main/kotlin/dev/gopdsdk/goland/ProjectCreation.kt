@@ -51,7 +51,7 @@ internal fun initArguments(request: NewGameRequest): List<String> = buildList {
 internal class NewGameDialog(project: Project) : DialogWrapper(project) {
     private val path = TextFieldWithBrowseButton()
     private val module = JBTextField()
-    private val name = JBTextField()
+    private val gameName = JBTextField()
     private val author = JBTextField()
     private val bundleID = JBTextField()
 
@@ -65,7 +65,7 @@ internal class NewGameDialog(project: Project) : DialogWrapper(project) {
     }
 
     val request: NewGameRequest
-        get() = NewGameRequest(path.text.trim(), module.text.trim(), name.text.trim(), author.text.trim(), bundleID.text.trim())
+        get() = NewGameRequest(path.text.trim(), module.text.trim(), gameName.text.trim(), author.text.trim(), bundleID.text.trim())
 
     override fun doValidate(): ValidationInfo? {
         if (path.text.isBlank()) return ValidationInfo("Choose a new project directory", path)
@@ -81,7 +81,7 @@ internal class NewGameDialog(project: Project) : DialogWrapper(project) {
         }
         addRow(0, "Project directory", path)
         addRow(1, "Go module", module)
-        addRow(2, "Game name", name)
+        addRow(2, "Game name", gameName)
         addRow(3, "Author", author)
         addRow(4, "Bundle ID", bundleID)
     }
