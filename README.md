@@ -117,6 +117,32 @@ newest supported platform directly, run:
 `runIde` launches a sandboxed GoLand. Open a Go module that uses gopdsdk; the
 native Language Services widget exposes server state and logs.
 
+## Device workflow
+
+Select a file in the application's Go module, then use **Tools | gopdsdk** or
+the **Playdate | Device** tab to check the connection, build for device, or
+build, install and run on Playdate. Build/run are also available in the Run
+menu. Save operations precede execution, and the selected module remains the
+command's working directory. Cancel a running operation through GoLand's
+background progress UI.
+
+The status bar shows the last explicit device operation and its CLI stages,
+including compilation, connection, deployment and launch. The initial state is
+unchecked; installed tools alone do not establish USB connectivity. Device
+operations are serialized within a project.
+
+**Read Crash Log** and **Read Error Log** mount Data Disk and open read-only
+editor tabs. Failed runs offer these actions without reading logs automatically.
+Use **Mount Data Disk** explicitly for disk access, and **Safely Eject Data Disk
+and Reconnect USB** to return to USB control; completion requires the CLI's
+reconnection confirmation. Cancellation or an uncertain failure requires a new
+explicit connection check. Device support requires the corresponding versioned
+CLI capabilities; unsupported commands ask you to update gopdsdk.
+
+Local plugin fixtures do not prove device-build, USB or physical-device
+readiness. Those acceptance checks remain external, alongside the full CI
+compatibility matrix.
+
 ## Architecture
 
 ```text

@@ -36,9 +36,9 @@ internal class SimulatorStatusBarWidgetFactory : StatusBarWidgetFactory {
             val root = generateSequence(file?.parent) { it.parent }.firstOrNull { it.findChild("go.mod") != null }
             val settings = root?.let { AnalyzerModuleSettings.settings(project, java.nio.file.Path.of(it.path)) }
                 ?: GopdsdkSettings.getInstance(project).state
-            return "Analysis: ${settings.target} | ${SimulatorWorkflowState.getInstance(project).text}"
+            return "Analysis: ${settings.target} | ${SimulatorWorkflowState.getInstance(project).text} | ${DeviceWorkflow.getInstance(project).text}"
         }
-        override fun getTooltipText(): String = "Active gopdsdk analysis and execution target: Simulator"
+        override fun getTooltipText(): String = "Analysis target and last explicit Simulator/device operation; device state is not polled"
         override fun getAlignment(): Float = 0.5f
         override fun install(statusBar: StatusBar) {
             project.messageBus.connect(this).subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, object : FileEditorManagerListener {
@@ -63,6 +63,17 @@ internal class PlaydateToolWindowFactory : ToolWindowFactory {
         }
         panel.add(toolbar.component, BorderLayout.CENTER)
         toolWindow.contentManager.addContent(ContentFactory.getInstance().createContent(panel, "Simulator", false))
+        val devicePanel = JPanel(BorderLayout())
+        val deviceActions = DefaultActionGroup().apply {
+            for (id in listOf("buildDevice", "runDevice", "checkDeviceConnection", "readCrashLog", "readErrorLog", "mountDeviceDisk", "unmountDeviceDisk")) {
+                add(ActionManager.getInstance().getAction("gopdsdk.$id"))
+            }
+        }
+        devicePanel.add(JBLabel("Device state appears in the status bar after an explicit operation. Logs mount Data Disk."), BorderLayout.NORTH)
+        devicePanel.add(ActionManager.getInstance().createActionToolbar("PlaydateDevice", deviceActions, false).apply {
+            targetComponent = devicePanel
+        }.component, BorderLayout.CENTER)
+        toolWindow.contentManager.addContent(ContentFactory.getInstance().createContent(devicePanel, "Device", false))
         toolWindow.contentManager.addContent(ContentFactory.getInstance().createContent(ProjectHealthPanel(project), "Project Health", false))
     }
 }

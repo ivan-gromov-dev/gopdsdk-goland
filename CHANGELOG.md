@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- Implemented M10 device actions for the selected Go module: connection probe,
+  build, install/run, explicit crash/error logs, Data Disk mount, and safe eject
+  with CLI-confirmed USB reconnection.
+- Added capability negotiation, cancellable per-project serialized operations,
+  distinct CLI progress stages, and last-explicit-operation device status.
+- Device logs open in read-only memory-backed editor tabs, only on request.
+  Failed runs offer explicit log actions and never read logs automatically.
+- Added focused plugin-unit fixtures for device contracts, cancellation,
+  connection evidence, progress framing, log content, and action registration.
+
+Evidence: local Kotlin compilation and focused plugin-unit checks. Full builds,
+cross-platform compatibility checks and Plugin Verifier are left to CI. Live
+editor, device-build, USB and physical-device acceptance remain unverified.
+
 ## 0.3.0 — 2026-09-15
 
 - Removed generated Kotlin compatibility bridges to deprecated/experimental

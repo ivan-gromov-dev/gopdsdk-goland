@@ -207,7 +207,8 @@ This is not SDK, Simulator, USB, or physical-device evidence.
 
 ## M10 — Device workflow and logs
 
-Status: planned after the Simulator workflow.
+Status: implementation complete; full compatibility CI and device acceptance
+evidence remain external gates.
 
 - show explicit device connection state without treating executable discovery
   as connectivity;
@@ -230,6 +231,24 @@ background polling.
 Verification: command-fixture and cancellation coverage first, followed by
 separately labeled device-build, USB, and physical-device acceptance. Simulator
 or sandboxed IDE tests do not establish device readiness.
+
+Tools | gopdsdk, the Run menu, and the Playdate Device tab expose module-scoped
+device commands. Operations negotiate CLI capabilities, run in cancellable
+background tasks, and display CLI progress stages in the status bar. Device
+operations are serialized per project. Connection state is the last explicit
+operation's result, initially unchecked; it is never inferred from discovery or
+background polling. Data Disk remains distinct from USB connectivity, and safe
+eject succeeds only when the CLI confirms USB reconnection.
+
+Crash/error logs open as read-only in-memory text files. Failed runs offer log
+actions, but never retrieve logs automatically. Reading a log mounts Data Disk;
+the user can then invoke Safely Eject Data Disk and Reconnect USB.
+
+Verification scope: focused plugin-unit fixtures cover command arguments,
+capability rejection, cancellation boundaries, typed failures, progress framing,
+USB evidence, disk/eject modes, log decoding, and read-only editor files. Full
+CI, live GoLand smoke checks, device-build, USB, and physical-device acceptance
+must be recorded separately; no device logs were read during implementation.
 
 ## M11 — Playdate tool window
 
