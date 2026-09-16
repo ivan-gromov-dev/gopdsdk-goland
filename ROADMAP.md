@@ -252,7 +252,8 @@ must be recorded separately; no device logs were read during implementation.
 
 ## M11 — Playdate tool window
 
-Status: planned after the underlying actions are stable.
+Status: implementation complete; full compatibility CI and live editor
+accessibility/interaction acceptance remain external gates.
 
 Add a Playdate tool window that summarizes the active project, selected target,
 gopdsdk and Playdate SDK versions, health state, device connection, build/run
@@ -263,6 +264,29 @@ behavior.
 Verification: multi-module selection, refresh, accessibility,
 empty/loading/error states, action routing, and consistency with the status bar,
 Problems view, and Run tool window.
+
+The default **Playdate | Overview** tab follows the active editor's nearest Go
+module and projects its analysis target, explicitly refreshed health, SDK
+version, analyzer protocol version, and the same last project operation state
+shown in the status bar. Module Problems counts come from GoLand's existing
+Problems collector and include all IDE sources; they are not a new analysis or
+a claim of complete project coverage. Existing actions provide Simulator/device
+build and run, configuration, connection checks, explicit log retrieval, and
+Data Disk operations. Problems and Run output remain in their native windows.
+
+The CLI does not expose a gopdsdk release-version contract, so the overview says
+it is unavailable rather than treating analyzer protocol `v1` as a release.
+Health is unchecked until explicitly requested; module switches discard stale
+reports, and late responses cannot overwrite a newer selection. The view's
+UI-only timer never probes hardware or reads logs. Simulator actions and build
+source navigation retain the selected module as their working directory.
+
+Evidence: focused plugin-unit tests and Kotlin compilation on Windows cover
+nested modules, stale refreshes, empty/loading/failure/cancellation states,
+action registrations, and presentation scope. CI owns the full OS/GoLand matrix
+and Plugin Verifier. Live keyboard/screen-reader interaction and consistency
+with populated Problems/Run windows still require editor-integration evidence.
+No SDK, Simulator, USB, or physical-device acceptance was performed locally.
 
 ## Required gopdsdk contracts
 

@@ -32,9 +32,7 @@ internal class SimulatorStatusBarWidgetFactory : StatusBarWidgetFactory {
         override fun ID(): String = "gopdsdk.simulator.target"
         override fun getPresentation(): StatusBarWidget.WidgetPresentation = this
         override fun getText(): String {
-            val file = FileEditorManager.getInstance(project).selectedFiles.firstOrNull()
-            val root = generateSequence(file?.parent) { it.parent }.firstOrNull { it.findChild("go.mod") != null }
-            val settings = root?.let { AnalyzerModuleSettings.settings(project, java.nio.file.Path.of(it.path)) }
+            val settings = activePlaydateModule(project)?.let { AnalyzerModuleSettings.settings(project, it) }
                 ?: GopdsdkSettings.getInstance(project).state
             return "Analysis: ${settings.target} | ${SimulatorWorkflowState.getInstance(project).text} | ${DeviceWorkflow.getInstance(project).text}"
         }
@@ -51,8 +49,12 @@ internal class SimulatorStatusBarWidgetFactory : StatusBarWidgetFactory {
 
 internal class PlaydateToolWindowFactory : ToolWindowFactory {
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
+        val overview = PlaydateOverview(project)
+        toolWindow.contentManager.addContent(ContentFactory.getInstance().createContent(overview, "Overview", false).apply {
+            setDisposer(overview)
+        })
         val panel = JPanel(BorderLayout()).apply {
-            add(JBLabel("Active target: Simulator"), BorderLayout.NORTH)
+            add(JBLabel("Execution target: Simulator; analysis target is shown in Overview and the status bar"), BorderLayout.NORTH)
         }
         val actions = DefaultActionGroup().apply {
             add(ActionManager.getInstance().getAction("gopdsdk.buildSimulator"))
@@ -104,18 +106,26 @@ private class ProjectHealthPanel(private val project: Project) : JPanel(BorderLa
                     .notify(project)
             }
         }
-        load(null)
+        raw.text = "Select a Go module and refresh to check project health."
     }
 
     private fun load(probe: String?) {
+        val root = activePlaydateModule(project) ?: run { raw.text = "Open a file in a Go module first."; return }
         refresh.isEnabled = false
         remediate.isEnabled = false
         com.intellij.openapi.progress.ProgressManager.getInstance().run(object : com.intellij.openapi.progress.Task.Backgroundable(project, "Checking Playdate project health", true) {
             override fun run(indicator: com.intellij.openapi.progress.ProgressIndicator) {
                 val service = ProjectHealthService.getInstance(project)
-                val report = if (probe == null) service.refresh() else service.probe(probe)
-                SwingUtilities.invokeLater { render(report) }
+                val report = if (probe == null) service.refresh(root) else service.probe(probe, root)
+                SwingUtilities.invokeLater {
+                    if (!project.isDisposed) {
+                        if (activePlaydateModule(project) == root) render(report)
+                        else { model.rowCount = 0; raw.text = "Module selection changed; refresh again."; refresh.isEnabled = true; remediate.isEnabled = true }
+                    }
+                }
             }
+            override fun onThrowable(error: Throwable) { raw.text = Redaction.message(error.message ?: "Health check failed"); refresh.isEnabled = true; remediate.isEnabled = true }
+            override fun onCancel() { raw.text = "Cancelled; refresh to retry."; refresh.isEnabled = true; remediate.isEnabled = true }
         })
     }
 

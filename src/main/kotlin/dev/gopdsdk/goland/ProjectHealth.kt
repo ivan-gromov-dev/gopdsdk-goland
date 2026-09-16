@@ -19,7 +19,7 @@ internal data class HealthCheck(
     val evidenceLevel: String,
     val remediation: HealthRemediation? = null,
 )
-internal data class HealthReport(val host: String, val sdkVersion: String?, val checks: List<HealthCheck>, val raw: String)
+internal data class HealthReport(val host: String, val sdkVersion: String?, val checks: List<HealthCheck>, val raw: String, val analyzerVersion: String? = null)
 
 internal object HealthProtocol {
     fun decodeDoctor(value: String): HealthReport? = runCatching {
@@ -107,27 +107,31 @@ internal class ProjectHealthService(private val project: Project) {
     @Volatile var report: HealthReport? = null
         private set
 
-    fun refresh(): HealthReport {
+    fun refresh(root: Path = Path.of(project.basePath ?: ".")): HealthReport {
         val settings = GopdsdkSettings.getInstance(project).state
         val executable = ExecutableDiscovery.find(settings.executablePath)
-        val root = Path.of(project.basePath ?: ".")
-        val analyzerReady = executable?.let { LspProbe.probe(it, project.basePath) is ProbeResult.Compatible } == true
+        val analyzer = executable?.let { LspProbe.probe(it, root.toString()) } as? ProbeResult.Compatible
+        val analyzerReady = analyzer != null
         val local = localProjectChecks(root, executable != null, analyzerReady)
         if (executable == null) return HealthReport("", null, local, "gopdsdk executable not found").also { report = it }
-        val command = GeneralCommandLine(executable.toString()).withParameters(doctorArguments(settings.playdateSDK)).withWorkDirectory(project.basePath)
-        val output = CapturingProcessHandler(command).runProcess(30_000)
+        val command = GeneralCommandLine(executable.toString()).withParameters(doctorArguments(settings.playdateSDK)).withWorkDirectory(root.toString())
+        val indicator = com.intellij.openapi.progress.ProgressManager.getInstance().progressIndicator
+        val handler = CapturingProcessHandler(command)
+        val output = if (indicator == null) handler.runProcess(30_000) else handler.runProcessWithProgressIndicator(indicator, 30_000)
+        indicator?.checkCanceled()
         val decoded = HealthProtocol.decodeDoctor(output.stdout)
-        return (decoded?.copy(checks = mergeHealthChecks(decoded.checks, local), raw = output.stdout + output.stderr)
-            ?: HealthReport("", null, local, output.stdout + output.stderr)).also { report = it }
+        require(!output.isTimeout && output.exitCode == 0 && decoded != null) { "Could not read structured project health: ${Redaction.message(output.stderr)}" }
+        return decoded.copy(checks = mergeHealthChecks(decoded.checks, local), raw = output.stdout + output.stderr,
+            analyzerVersion = analyzer?.analyzerVersion).also { report = it }
     }
 
-    fun probe(id: String): HealthReport {
-        val current = report ?: refresh()
+    fun probe(id: String, root: Path = Path.of(project.basePath ?: ".")): HealthReport {
+        val current = refresh(root)
         val settings = GopdsdkSettings.getInstance(project).state
         val executable = ExecutableDiscovery.find(settings.executablePath) ?: return current
         val arguments = probeArguments(id, settings.playdateSDK) ?: return current
         val output = CapturingProcessHandler(
-            GeneralCommandLine(executable.toString()).withParameters(arguments).withWorkDirectory(project.basePath),
+            GeneralCommandLine(executable.toString()).withParameters(arguments).withWorkDirectory(root.toString()),
         ).runProcess(60_000)
         val probe = HealthProtocol.decodeProbe(output.stdout)
         return current.copy(

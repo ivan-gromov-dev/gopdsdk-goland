@@ -16,20 +16,22 @@ internal data class BuildDiagnostic(val location: BuildLocation, val message: St
 internal class BuildDiagnostics(private val project: Project) {
     @Volatile private var current: List<BuildDiagnostic> = emptyList()
 
-    fun replace(failure: ToolFailure?) {
-        current = failure?.locations.orEmpty().map { BuildDiagnostic(it, "gopdsdk build: ${failure?.category}") }
+    fun replace(failure: ToolFailure?, root: String? = project.basePath) {
+        current = failure?.locations.orEmpty().map {
+            BuildDiagnostic(it.copy(path = root?.let { base -> buildSourcePath(Path.of(base), it.path).toString() } ?: it.path), "gopdsdk build: ${failure?.category}")
+        }
         DaemonCodeAnalyzer.getInstance(project).restart("gopdsdk build diagnostics changed")
     }
 
     fun forFile(file: PsiFile): List<BuildDiagnostic> {
-        val root = project.basePath ?: return emptyList()
-        val relative = runCatching { Path.of(root).relativize(Path.of(file.virtualFile.path)).toString().replace('\\', '/') }.getOrNull()
-            ?: return emptyList()
-        return current.filter { it.location.path == relative }
+        val path = Path.of(file.virtualFile.path).toAbsolutePath().normalize()
+        return current.filter { Path.of(it.location.path).toAbsolutePath().normalize() == path }
     }
 
     companion object { fun getInstance(project: Project): BuildDiagnostics = project.getService(BuildDiagnostics::class.java) }
 }
+
+internal fun buildSourcePath(root: Path, relative: String): Path = root.resolve(relative).toAbsolutePath().normalize()
 
 internal class BuildFailureAnnotator : ExternalAnnotator<PsiFile, List<BuildDiagnostic>>() {
     override fun collectInformation(file: PsiFile): PsiFile = file
