@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+## 1.0.0 — 2026-09-16
+
+- Completed M11's Playdate Overview: active module and analysis target,
+  explicitly refreshed project health, SDK/analyzer protocol versions, shared
+  operation state, and module Problems counts from the IDE's existing collector.
+- Reused build/run, analyzer, device, and log actions, with shortcuts to native
+  Problems and Run output. Health refreshes reject stale module results and
+  expose unchecked, loading, failure, and cancellation states.
+- Routed Simulator actions and build error locations through the selected Go
+  module instead of always using the project root. Health checks are also
+  module-scoped and no longer run automatically when the tool window opens.
+- Explicitly label the gopdsdk release version as unavailable: the existing CLI
+  only provides the analyzer protocol version, not a release-version contract.
 - Implemented M10 device actions for the selected Go module: connection probe,
   build, install/run, explicit crash/error logs, Data Disk mount, and safe eject
   with CLI-confirmed USB reconnection.
@@ -12,9 +25,9 @@
 - Added focused plugin-unit fixtures for device contracts, cancellation,
   connection evidence, progress framing, log content, and action registration.
 
-Evidence: local Kotlin compilation and focused plugin-unit checks. Full builds,
-cross-platform compatibility checks and Plugin Verifier are left to CI. Live
-editor, device-build, USB and physical-device acceptance remain unverified.
+Evidence: local Kotlin compilation and focused plugin-unit checks, plus the
+source-snapshot CI matrix and Plugin Verifier linked above. Live editor,
+device-build, USB and physical-device acceptance remain unverified.
 
 ## 0.3.0 — 2026-09-15
 

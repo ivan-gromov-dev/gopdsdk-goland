@@ -60,6 +60,7 @@ internal class SimulatorRunConfiguration(
     class Options : com.intellij.execution.configurations.LocatableRunConfigurationOptions() {
         var operation by string(SimulatorOperation.RUN.name)
         var packagePath by string(".")
+        var workingDirectory by string("")
         var force by property(false)
     }
 
@@ -74,6 +75,9 @@ internal class SimulatorRunConfiguration(
     var force: Boolean
         get() = options.force
         set(value) { options.force = value }
+    var workingDirectory: String
+        get() = options.workingDirectory.orEmpty()
+        set(value) { options.workingDirectory = value }
 
     override fun getConfigurationEditor(): SettingsEditor<out RunConfiguration> = SimulatorSettingsEditor()
     override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState = SimulatorCommandLineState(environment, this)
@@ -117,16 +121,17 @@ private class SimulatorCommandLineState(
             ?: throw ExecutionException("gopdsdk was not found. Configure it in Settings | Tools | gopdsdk.")
         val command = if (configuration.operation == SimulatorOperation.BUILD) "build" else "run"
         val arguments = simulatorArguments(configuration.operation, configuration.packagePath, settings.playdateSDK, configuration.force)
-        val commandLine = GeneralCommandLine(executable.toString()).withParameters(arguments).withWorkDirectory(environment.project.basePath)
+        val commandLine = GeneralCommandLine(executable.toString()).withParameters(arguments)
+            .withWorkDirectory(configuration.workingDirectory.takeIf { it.isNotBlank() } ?: environment.project.basePath)
         val handler = OSProcessHandler(commandLine)
         ProcessTerminatedListener.attach(handler)
-        handler.addProcessListener(SimulatorProcessListener(environment.project, command))
+        handler.addProcessListener(SimulatorProcessListener(environment.project, command, commandLine.workDirectory?.path))
         SimulatorWorkflowState.getInstance(environment.project).started(command)
         return handler
     }
 }
 
-private class SimulatorProcessListener(private val project: Project, private val command: String) : ProcessListener {
+private class SimulatorProcessListener(private val project: Project, private val command: String, private val workingDirectory: String?) : ProcessListener {
     private val stdout = StringBuilder()
     private val stderr = StringBuilder()
     override fun onTextAvailable(event: ProcessEvent, outputType: Key<*>) {
@@ -152,14 +157,19 @@ private class SimulatorProcessListener(private val project: Project, private val
     }
     private fun openFirstFailure(failure: ToolFailure?) {
         val location = failure?.locations?.firstOrNull() ?: return
-        val root = project.basePath ?: return
-        val file = LocalFileSystem.getInstance().findFileByPath("$root/${location.path}") ?: return
-        OpenFileDescriptor(project, file, location.line - 1, location.column - 1).navigate(true)
+        val root = workingDirectory ?: return
+        com.intellij.openapi.application.ApplicationManager.getApplication().invokeLater {
+            if (!project.isDisposed) {
+                val path = buildSourcePath(java.nio.file.Path.of(root), location.path).toString()
+                val file = LocalFileSystem.getInstance().findFileByPath(path) ?: return@invokeLater
+                OpenFileDescriptor(project, file, location.line - 1, location.column - 1).navigate(true)
+            }
+        }
     }
     override fun processTerminated(event: ProcessEvent) {
         when (val result = SimulatorProtocol.decode(stdout.toString())) {
             is ToolMessage.Result -> if (!result.ok) {
-                BuildDiagnostics.getInstance(project).replace(result.failure)
+                BuildDiagnostics.getInstance(project).replace(result.failure, workingDirectory)
                 openFirstFailure(result.failure)
             }
             else -> Unit
@@ -189,14 +199,19 @@ internal class SimulatorWorkflowState(private val project: Project) {
 internal abstract class SimulatorAction(private val operation: SimulatorOperation) : AnAction(), DumbAware {
     override fun actionPerformed(event: AnActionEvent) {
         val project = event.project ?: return
-        executeSimulator(project, operation)
+        val selected = event.getData(com.intellij.openapi.actionSystem.CommonDataKeys.VIRTUAL_FILE)?.path
+        val root = selected?.let { AnalyzerAdministration.moduleRoot(java.nio.file.Path.of(it)) } ?: activePlaydateModule(project) ?: return
+        executeSimulator(project, operation, root)
     }
 }
 
-internal fun executeSimulator(project: Project, operation: SimulatorOperation) {
+internal fun executeSimulator(project: Project, operation: SimulatorOperation, root: java.nio.file.Path? = activePlaydateModule(project)) {
     val type = com.intellij.execution.configurations.ConfigurationTypeUtil.findConfigurationType(SimulatorConfigurationType::class.java)
     val factory = type.configurationFactories.single()
-    val configuration = SimulatorRunConfiguration(project, factory, operation.displayName).apply { this.operation = operation }
+    val configuration = SimulatorRunConfiguration(project, factory, operation.displayName).apply {
+        this.operation = operation
+        workingDirectory = root?.toString().orEmpty()
+    }
     val settings = com.intellij.execution.RunManager.getInstance(project).createConfiguration(configuration, factory)
     settings.isTemporary = true
     ProgramRunnerUtil.executeConfiguration(settings, com.intellij.execution.executors.DefaultRunExecutor.getRunExecutorInstance())

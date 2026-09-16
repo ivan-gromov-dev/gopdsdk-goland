@@ -19,10 +19,8 @@ are documented in [RELEASING.md](RELEASING.md).
 
 ## Requirements
 
-The planned device workflow requires versioned `gopdsdk device disk
-mount|unmount` results so the plugin can explicitly enter Data Disk mode, safely
-eject it, and confirm the return to a connected USB state. This is a roadmap
-requirement only; the GoLand client does not implement the commands yet.
+The device workflow requires versioned `gopdsdk device disk mount|unmount`
+results to enter Data Disk mode, safely eject it, and confirm USB reconnection.
 
 - GoLand 2026.1.4 through 2026.2;
 - JDK 21 for development (the Gradle wrapper can provision it automatically);
@@ -60,6 +58,21 @@ failure leave the target unopened, while success opens the generated project
 and points to the first Simulator run.
 
 ## Analyzer configuration and adoption
+
+The default **Playdate | Overview** tab follows the selected editor's Go module.
+It shows the analysis target, SDK and analyzer protocol versions, project
+health, and the same last Simulator/device operation state as the status bar.
+Click **Refresh project health** to run an explicit check; opening the window
+does not probe devices or read logs. Changing modules clears the previous health
+result. The gopdsdk release version is shown as unavailable because the current
+CLI contract does not expose it.
+
+Build/run actions use the selected module. The Overview also offers analyzer
+configuration, device connection and Data Disk actions, explicitly requested
+logs, and shortcuts to **Problems** and **Run**. The module Problems count uses
+the IDE's currently published problems from all sources, including GoLand;
+it is not a full-project analyzer result. Simulator/device tabs remain available
+for focused actions, and **Project Health** provides detailed raw check output.
 
 Select a file in the desired Go module and open **Tools | gopdsdk | Analyzer
 Configuration and Findings…**. The dialog stays bound to that module:

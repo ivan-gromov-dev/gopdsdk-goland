@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "dev.gopdsdk"
-version = "0.3.0"
+version = "1.0.0"
 
 val minimumGoLandVersion = providers.gradleProperty("minimumGoLandVersion")
 val latestGoLandVersion = providers.gradleProperty("latestGoLandVersion")
