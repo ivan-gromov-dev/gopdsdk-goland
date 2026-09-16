@@ -3,6 +3,13 @@
 This roadmap validates `gopdsdk lsp` through a thin GoLand client. Plugin/unit
 evidence is distinct from live editor, SDK, Simulator, USB, and device evidence.
 
+The 1.0.0 release freezes the implemented M0–M11 feature set. Its source
+snapshot passed the full CI matrix and Plugin Verifier; durable evidence and
+release limitations are recorded in [CHANGELOG.md](CHANGELOG.md#100--2026-09-16).
+Remaining work is live editor/reliability/accessibility acceptance, SDK and
+physical-device validation, and distribution evidence described below. Release
+packaging and Marketplace publication are separate gates in [RELEASING.md](RELEASING.md).
+
 ## M0 — Scaffold
 
 Status: complete.
