@@ -27,6 +27,13 @@ class DiagnosticUxTest {
             "gopdsdk.buildSimulator",
             "gopdsdk.runSimulator",
             "gopdsdk.analyzer",
+            "gopdsdk.buildDevice",
+            "gopdsdk.runDevice",
+            "gopdsdk.checkDeviceConnection",
+            "gopdsdk.readCrashLog",
+            "gopdsdk.readErrorLog",
+            "gopdsdk.mountDeviceDisk",
+            "gopdsdk.unmountDeviceDisk",
         )))
     }
 

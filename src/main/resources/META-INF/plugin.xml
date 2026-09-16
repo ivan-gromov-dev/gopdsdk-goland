@@ -30,10 +30,24 @@
             <separator/>
             <action id="gopdsdk.buildSimulator" class="dev.gopdsdk.goland.BuildSimulatorAction" text="Build for Simulator" icon="AllIcons.Actions.Compile"/>
             <action id="gopdsdk.runSimulator" class="dev.gopdsdk.goland.RunSimulatorAction" text="Build and Run in Simulator" icon="AllIcons.Actions.Execute"/>
+            <separator/>
+            <action id="gopdsdk.buildDevice" class="dev.gopdsdk.goland.BuildDeviceAction" text="Build for Device"/>
+            <action id="gopdsdk.runDevice" class="dev.gopdsdk.goland.RunDeviceAction" text="Build, Install and Run on Device"/>
+            <action id="gopdsdk.checkDeviceConnection" class="dev.gopdsdk.goland.CheckDeviceConnectionAction" text="Check Device Connection"/>
+            <action id="gopdsdk.readCrashLog" class="dev.gopdsdk.goland.ReadCrashLogAction" text="Read Crash Log (Mounts Data Disk)"/>
+            <action id="gopdsdk.readErrorLog" class="dev.gopdsdk.goland.ReadErrorLogAction" text="Read Error Log (Mounts Data Disk)"/>
+            <action id="gopdsdk.mountDeviceDisk" class="dev.gopdsdk.goland.MountDeviceDiskAction" text="Mount Data Disk"/>
+            <action id="gopdsdk.unmountDeviceDisk" class="dev.gopdsdk.goland.UnmountDeviceDiskAction" text="Safely Eject Data Disk and Reconnect USB"/>
         </group>
         <reference ref="gopdsdk.buildSimulator">
             <add-to-group group-id="RunMenu" anchor="last"/>
             <add-to-group group-id="MainToolBar" anchor="last"/>
+        </reference>
+        <reference ref="gopdsdk.buildDevice">
+            <add-to-group group-id="RunMenu" anchor="last"/>
+        </reference>
+        <reference ref="gopdsdk.runDevice">
+            <add-to-group group-id="RunMenu" anchor="last"/>
         </reference>
         <reference ref="gopdsdk.runSimulator">
             <add-to-group group-id="RunMenu" anchor="last"/>
